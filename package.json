@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "publish": "tsc && npm version patch && npm publish"
+    "remove-dist": "if [ -d dist ]; then rm -rf dist; fi",
+    "publish": "npm run remove-dist && tsc && npm version patch && npm publish"
   },
   "repository": {
     "type": "git",
