@@ -1,10 +1,15 @@
-import { createExpressMiddleware, RoutesToSDK } from '../Lib';
+import { createExpressMiddleware, RoutesToSDK, onError } from '../Lib';
 import { routes } from './routes';
 import express from 'express';
 
 const app = express();
 
-app.use('', createExpressMiddleware(routes));
+const errorHandler = onError(({ error, req, path, mdlwData }) => {
+  if (error.name === 'Internal server error') console.log(); // Send to bug reporting
+  else console.log('Other error', error, path, mdlwData);
+});
+
+app.use('', createExpressMiddleware(routes, errorHandler));
 
 app.use('', (req, res) => res.send('Root not found'));
 

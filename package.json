@@ -7,9 +7,6 @@
   "files": [
     "/dist"
   ],
-  "bin": {
-    "compile-sdk": "/bin/index.js"
-  },
   "scripts": {
     "dev-test": "clear && nodemon --config nodemon.json ./Example/index.ts",
     "compile-test": "npx ts-node ./Example/index.ts",

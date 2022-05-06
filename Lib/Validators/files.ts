@@ -1,6 +1,6 @@
 import formidable from 'formidable';
 import { FilesConfig } from './types';
-import { createHttpError } from '../Controller';
+import { createHttpError } from '../Errors';
 
 export const validateFiles = (config: FilesConfig, files: formidable.Files) => {
   const missingFiles: string[] = [];

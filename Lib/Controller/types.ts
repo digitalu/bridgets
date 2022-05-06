@@ -6,8 +6,13 @@ import { Endpoint } from '../Endpoint';
 import formidable from 'formidable';
 import { Request } from 'express';
 
-export type Middleware = (p: Request) => Record<any, any> | void;
-type MidNotExists = [(req: Request) => Record<string, { middlewareNotExists: true }>];
+export type BridgeNextFunction = <T extends Record<any, any> = { NoMetaParametersGiven: true }>(
+  p?: T
+) => Readonly<T extends { NoMetaParametersGiven: true } ? { NoMetaParametersGiven: true } : T>;
+
+export type Middleware = (p: Request, next: BridgeNextFunction) => Record<any, any>;
+type MidNotExistsRet = Record<string, { middlewareNotExists: true }>;
+type MidNotExists = [(req: Request) => MidNotExistsRet];
 
 type BodyNotExists = { BridgeBodyDoesNotExists: 'true' };
 type QueryNotExists = { BridgeQueryDoesNotExists: 'true' };
@@ -35,11 +40,11 @@ export interface ControllerI {
       p: {
         // MIDDLEWARES
         [key in KeysWithValNotNever<
-          ReturnType<Mids[number]> extends Record<string, { middlewareNotExists: true }>
+          ReturnType<Mids[number]> extends MidNotExistsRet
             ? { middleware: never }
-            : UnionToIntersection<ReturnType<Mids[number]>> & { error: never }
+            : UnionToIntersection<ReturnType<Mids[number]>> & { error: never; NoMetaParametersGiven: never }
         > &
-          keyof (ReturnType<Mids[number]> extends Record<string, { middlewareNotExists: true }>
+          keyof (ReturnType<Mids[number]> extends MidNotExistsRet
             ? { middleware: never }
             : UnionToIntersection<ReturnType<Mids[number]>>)]: (ReturnType<Mids[number]> extends Record<
           string,

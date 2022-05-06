@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { AbstractValidator } from './validator';
 import { ZodSchema } from 'zod';
-import { createHttpError } from '../Controller';
+import { createHttpError } from '../Errors';
 
 export class ZodValidator extends AbstractValidator {
   constructor(private zodSchema: ZodSchema, private from: 'body' | 'query' | 'headers') {

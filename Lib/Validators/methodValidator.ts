@@ -1,7 +1,7 @@
 import { Method } from '../Routes';
 import { Request } from 'express';
 import { AbstractValidator } from './validator';
-import { createHttpError } from '../Controller';
+import { createHttpError } from '../Errors';
 
 export class MethodValidator extends AbstractValidator {
   constructor(private method: Method) {
