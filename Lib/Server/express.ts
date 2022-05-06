@@ -9,29 +9,30 @@ export const createExpressMiddleware = (routes: BridgeRoutes, onError?: ErrorHan
   const serverRoutes = createRoutes(routes);
 
   return async (req: Request, res: Response, next: NextFunction) => {
-    const route = serverRoutes[req.path];
-    if (!route) return next();
-
-    if (!route.filesConfig) req.body = await getJSONDataFromRequestStream(req);
-
     let validation: any = {};
-    if (route.validator) validation = await route.validator.validate(req, {});
-
-    if (validation.error) {
-      onError?.({
-        error: validation.error,
-        path: req.path,
-        req,
-        headers: req.headers,
-        body: req.body,
-        query: req.query,
-      } as any);
-      return res.status(validation.error.status || 500).json({ error: validation.error });
-    }
-
-    let result: any;
 
     try {
+      const route = serverRoutes[req.path];
+      if (!route) return next();
+
+      if (!route.filesConfig) req.body = await getJSONDataFromRequestStream(req);
+
+      if (route.validator) validation = await route.validator.validate(req, {});
+
+      if (validation.error) {
+        onError?.({
+          error: validation.error,
+          path: req.path,
+          req,
+          headers: req.headers,
+          body: req.body,
+          query: req.query,
+        } as any);
+        return res.status(validation.error.status || 500).json({ error: validation.error });
+      }
+
+      let result: any;
+
       if (route.filesConfig) {
         const form = formidable({ multiples: true });
 
