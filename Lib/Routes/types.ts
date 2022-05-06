@@ -2,7 +2,7 @@ import { ControllerI } from '../Controller/';
 import { Endpoint } from '../Endpoint';
 import { Validator, FilesConfig } from '../Validators';
 
-export type BridgeRoutes = { [key: string]: BridgeRoutes | ControllerI };
+export type BridgeRoutes = { [key: string | number | symbol]: BridgeRoutes | ControllerI };
 
 export interface ServerRoutes {
   [key: string]: {
