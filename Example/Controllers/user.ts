@@ -1,4 +1,4 @@
-import { Controller, createMiddleware } from '../../Lib';
+import { Controller, createMiddleware, createHttpError } from '../../Lib';
 import { z } from 'zod';
 import fs from 'fs';
 
@@ -7,12 +7,9 @@ const auth = (admin: boolean) =>
     return { Yo: admin };
   });
 
-const auth2 = createMiddleware(() => {
-  return { Yoo: 8 };
-});
-
-const mid = createMiddleware((req) => {
-  return { req };
+const auth2 = createMiddleware((req) => {
+  if (req.headers.token) return createHttpError('Bad Request', 'AH');
+  return { Yoo: 8 } as const;
 });
 
 class Invoice extends Controller {
@@ -36,13 +33,13 @@ export class User extends Controller {
 
   public create = this.createEndpoint({
     method: 'POST',
-    files: ['pp'] as const,
+    // files: ['pp'] as const,
     headers: z.object({ token: z.string() }),
-    middlewares: [mid],
+    // middlewares: [mid],
     handler: (p) => {
       if (p.headers.token !== 'raul_strip_teaseuse') return this.createHttpError('Unauthorized', 'Wrong token');
 
-      fs.writeFile('./public/' + p.files.pp.originalFilename, fs.readFileSync(p.files.pp.filepath), () => console.error);
+      // fs.writeFile('./public/' + p.files.pp.originalFilename, fs.readFileSync(p.files.pp.filepath), () => console.error);
       return p.headers.token;
     },
   });

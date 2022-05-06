@@ -6,7 +6,7 @@ import { Endpoint } from '../Endpoint';
 import formidable from 'formidable';
 import { Request } from 'express';
 
-export type Middleware = (p: Request) => Record<any, any>;
+export type Middleware = (p: Request) => Record<any, any> | void;
 type MidNotExists = [(req: Request) => Record<string, { middlewareNotExists: true }>];
 
 type BodyNotExists = { BridgeBodyDoesNotExists: 'true' };
@@ -37,7 +37,7 @@ export interface ControllerI {
         [key in KeysWithValNotNever<
           ReturnType<Mids[number]> extends Record<string, { middlewareNotExists: true }>
             ? { middleware: never }
-            : UnionToIntersection<ReturnType<Mids[number]>>
+            : UnionToIntersection<ReturnType<Mids[number]>> & { error: never }
         > &
           keyof (ReturnType<Mids[number]> extends Record<string, { middlewareNotExists: true }>
             ? { middleware: never }
