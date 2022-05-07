@@ -77,7 +77,7 @@ export function createMinifier(ts: any): Minifier {
           ) {
             result += '\n';
           } else if (lastHadSeparatingNewLine && lastWrittenToken === ts.SyntaxKind.Identifier) {
-            result += ';';
+            result += '\n';
           }
 
           writeText(scanner.getTokenText());

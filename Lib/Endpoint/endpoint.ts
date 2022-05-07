@@ -22,7 +22,7 @@ export class Endpoint<SDKHandler extends (...args: any[]) => any> {
     headersSchema?: ZodSchema;
     filesConfig?: FilesConfig;
     method: Method;
-    middlewares?: Middleware[];
+    middlewares?: Readonly<Middleware[]>;
     description?: string;
   }) {
     this.handler = p.handler;

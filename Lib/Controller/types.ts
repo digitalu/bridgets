@@ -1,22 +1,19 @@
 import { ZodSchema } from 'zod';
-import { UnionToIntersection, KeysWithValNotNever } from '../Utilities';
+import {
+  UnionToIntersection,
+  KeysWithValNotNever,
+  ExcludeNeverKeys,
+  ExtractReturnTypes,
+  BridgeNextFunction,
+  Middleware,
+  GOGO,
+} from '../Utilities';
 import { Method } from '../Routes';
 import { FilesConfig } from '../Validators';
 import { Endpoint } from '../Endpoint';
 import formidable from 'formidable';
 import { Request } from 'express';
 
-export type BridgeNextFunction = <T extends Record<any, any> = { NoMetaParametersGiven: true }>(
-  p?: T
-) => Readonly<T extends { NoMetaParametersGiven: true } ? { NoMetaParametersGiven: true } : T>;
-
-export type Middleware = (p: Request, next: BridgeNextFunction) => Record<any, any>;
-type MidNotExistsRet = Record<string, { middlewareNotExists: true }>;
-type MidNotExists = [(req: Request) => MidNotExistsRet];
-
-type BodyNotExists = { BridgeBodyDoesNotExists: 'true' };
-type QueryNotExists = { BridgeQueryDoesNotExists: 'true' };
-type HeadersNotExists = { BridgeHeadersDoesNotExists: 'true' };
 type FilesDoNotExists = ['BridgeFilesDoNotExists'];
 
 export interface RouteParams<Body, Query, Mids, Handler, Method, Headers, Files> {
@@ -39,25 +36,13 @@ export interface ControllerI {
     Handler extends (
       p: {
         // MIDDLEWARES
-        [key in KeysWithValNotNever<
-          ReturnType<Mids[number]> extends MidNotExistsRet
-            ? { middleware: never }
-            : UnionToIntersection<ReturnType<Mids[number]>> & { error: never; NoMetaParametersGiven: never }
-        > &
-          keyof (ReturnType<Mids[number]> extends MidNotExistsRet
-            ? { middleware: never }
-            : UnionToIntersection<ReturnType<Mids[number]>>)]: (ReturnType<Mids[number]> extends Record<
-          string,
-          { middlewareNotExists: true }
-        >
-          ? { middleware: never }
-          : UnionToIntersection<ReturnType<Mids[number]>>)[key];
+        [key in KeysWithValNotNever<{ mid: GOGO<Mids> }> & keyof { mid: GOGO<Mids> }]: { mid: GOGO<Mids> }[key];
       } & {
         // BODY & QUERY & FORMDATA
         [key in KeysWithValNotNever<{
-          body: Body extends BodyNotExists ? never : Body;
-          query: Query extends QueryNotExists ? never : Query;
-          headers: Headers extends HeadersNotExists ? never : Headers;
+          body: Body;
+          query: Query;
+          headers: Headers;
           files: Files extends FilesDoNotExists
             ? never
             : Files extends 'any'
@@ -65,18 +50,18 @@ export interface ControllerI {
             : { [key in Files[number]]: formidable.File };
         }> &
           keyof {
-            body: Body extends BodyNotExists ? never : Body;
-            query: Query extends QueryNotExists ? never : Query;
-            headers: Headers extends HeadersNotExists ? never : Headers;
+            body: Body;
+            query: Query;
+            headers: Headers;
             files: Files extends FilesDoNotExists
               ? never
               : Files extends 'any'
               ? { [key: string]: formidable.File }
               : { [key in Files[number]]: formidable.File };
           }]: {
-          body: Body extends BodyNotExists ? never : Body;
-          query: Query extends QueryNotExists ? never : Query;
-          headers: Headers extends HeadersNotExists ? never : Headers;
+          body: Body;
+          query: Query;
+          headers: Headers;
           files: Files extends FilesDoNotExists
             ? never
             : Files extends 'any'
@@ -86,11 +71,11 @@ export interface ControllerI {
       }
     ) => Res,
     Res,
-    Body extends Record<string, any> = BodyNotExists,
-    Query extends Record<string, string> = QueryNotExists,
-    Headers extends Record<string, string> = HeadersNotExists,
+    Body extends Record<string, any> = never,
+    Query extends Record<string, string> = never,
+    Headers extends Record<string, string> = never,
     Files extends FilesConfig = FilesDoNotExists,
-    Mids extends Middleware[] = MidNotExists,
+    Mids extends ReadonlyArray<Middleware> = never,
     Meth extends Method = 'POST'
   >(
     p: RouteParams<Body, Query, Mids, Handler, Meth, Headers, Files>

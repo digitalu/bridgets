@@ -17,6 +17,9 @@ const visiteRoutes = (
   Object.entries(routes).forEach(([name, subRouteOrController]) => {
     if (isController(subRouteOrController))
       writeController(subRouteOrController, [...pathArray, name], sdkLocation, typeLocation, sdkTypeName);
-    else visiteRoutes(subRouteOrController, [...pathArray, name], sdkLocation, typeLocation, sdkTypeName);
+    else {
+      createFolder(pathArrayToPath([...pathArray, name], sdkLocation));
+      visiteRoutes(subRouteOrController, [...pathArray, name], sdkLocation, typeLocation, sdkTypeName);
+    }
   });
 };

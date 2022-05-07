@@ -4,3 +4,4 @@ export * from './Compiler';
 export * from './Routes';
 export * from './Errors';
 export * from './Endpoint';
+export * from './Utilities';
