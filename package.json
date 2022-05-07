@@ -7,9 +7,13 @@
   "files": [
     "/dist"
   ],
+  "bridgeType": {
+    "name": "SDKRoutes",
+    "source": "./Example/index.ts"
+  },
   "scripts": {
-    "dev-test": "clear && nodemon --config nodemon.json ./Example/index.ts",
-    "compile-test": "npx ts-node ./Example/index.ts",
+    "dev-test": "clear && nodemon --config nodemon.json ./Example/index.ts -c",
+    "compile-test": "npx ts-node ./Example/index.ts -c",
     "build": "tsc",
     "remove-dist": "if [ -d dist ]; then rm -rf dist; fi",
     "publish-minor": "npm run remove-dist && tsc && npm version patch && npm publish"
@@ -32,6 +36,7 @@
   },
   "homepage": "https://github.com/digitalu/bridgets#readme",
   "dependencies": {
+    "child_process": "^1.0.2",
     "express": "^4.18.1",
     "formidable": "^2.0.1",
     "zod": "^3.14.4"

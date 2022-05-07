@@ -4,8 +4,12 @@ import { ErrorHandler } from '../Errors/types';
 import { validateFiles } from '../Validators';
 import { getJSONDataFromRequestStream } from './bodyJSON';
 import formidable from 'formidable';
+import { compile } from '../Compiler/test';
+var argv = require('minimist')(process.argv.slice(2));
 
 export const createExpressMiddleware = (routes: BridgeRoutes, onError?: ErrorHandler) => {
+  if (argv.c) compile();
+
   const serverRoutes = createRoutes(routes);
 
   return async (req: Request, res: Response, next: NextFunction) => {
