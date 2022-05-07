@@ -1,1 +1,6 @@
-{ "tsConfigLocation": "./tsconfig.json", "typeLocation": "./Example/index.ts", "sdkLocation": "./sdk" }
+{
+  "tsConfigLocation": "./tsconfig.json",
+  "typeLocation": "./Example/index.ts",
+  "sdkLocation": "./sdk",
+  "sdkTypeName": "SDKRoutes"
+}

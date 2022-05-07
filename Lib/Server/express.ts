@@ -8,7 +8,7 @@ import { compile } from '../Compiler/test';
 var argv = require('minimist')(process.argv.slice(2));
 
 export const createExpressMiddleware = (routes: BridgeRoutes, onError?: ErrorHandler) => {
-  if (argv.c) compile();
+  if (argv.c) compile(routes);
 
   const serverRoutes = createRoutes(routes);
 
@@ -28,9 +28,6 @@ export const createExpressMiddleware = (routes: BridgeRoutes, onError?: ErrorHan
           error: validation.error,
           path: req.path,
           req,
-          headers: req.headers,
-          body: req.body,
-          query: req.query,
         } as any);
         return res.status(validation.error.status || 500).json({ error: validation.error });
       }
@@ -53,9 +50,6 @@ export const createExpressMiddleware = (routes: BridgeRoutes, onError?: ErrorHan
               path: req.path,
               req,
               mdlwData: validation,
-              headers: req.headers,
-              body: req.body,
-              query: req.query,
             } as any);
             return res.status(result.error.status || 500).json({ error: result.error });
           }
@@ -90,9 +84,6 @@ export const createExpressMiddleware = (routes: BridgeRoutes, onError?: ErrorHan
         path: req.path,
         req,
         mdlwData: validation,
-        headers: req.headers,
-        body: req.body,
-        query: req.query,
       } as any);
       return res.status(500).json({ error: { status: 500, name: 'Internal server error' } });
     }

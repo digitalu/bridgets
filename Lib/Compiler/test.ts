@@ -1,4 +1,7 @@
 import { execSync } from 'child_process';
+import { copyTypesAndMinify } from './copyTypes';
+import { compileSDK } from './compileSDK';
+import { BridgeRoutes } from '../Routes';
 import fs from 'fs';
 
 const command = 'echo YOOOOO';
@@ -16,15 +19,18 @@ const runCommand = (command: string) => {
   return true;
 };
 
-export const compile = () => {
-  console.log('YO');
-
+export const compile = (routes: BridgeRoutes) => {
   if (!fs.existsSync('bridgets.config.json')) throw new Error('No Config');
 
   const cfg = JSON.parse(fs.readFileSync('bridgets.config.json', 'utf-8'));
 
-  console.log(createDtsFolderCommand(cfg.tsConfigLocation, cfg.sdkLocation));
-  runCommand(createDtsFolderCommand(cfg.tsConfigLocation, cfg.sdkLocation));
+  if (fs.existsSync(cfg.sdkLocation)) fs.rmSync(cfg.sdkLocation, { recursive: true });
+
+  runCommand(createDtsFolderCommand(cfg.tsConfigLocation, `${cfg.sdkLocation}/dts`));
+
+  copyTypesAndMinify(cfg.sdkLocation);
+
+  compileSDK(routes, cfg.sdkLocation, cfg.typeLocation, cfg.sdkTypeName);
 
   runCommand(command);
   process.exit(1);

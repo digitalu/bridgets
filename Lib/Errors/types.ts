@@ -7,7 +7,4 @@ export type ErrorHandler = (p: {
   path: string;
   req: Request;
   mdlwData?: Record<any, any>;
-  headers?: Record<string, string>;
-  body?: Record<any, any>;
-  query?: Record<any, any>;
 }) => void;

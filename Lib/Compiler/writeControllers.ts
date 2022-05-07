@@ -2,7 +2,13 @@ import { ControllerI } from '../Controller';
 import { isController, isEndpoint, upperCaseFirstLetterOnly, lastElem, pathArrayToPath } from '../Utilities';
 import { createFolder, writeFile } from './fs';
 
-export const writeController = (controller: ControllerI, pathArray: string[], sdkLocation: string): void => {
+export const writeController = (
+  controller: ControllerI,
+  pathArray: string[],
+  sdkLocation: string,
+  typeLocation: string,
+  sdkTypeName: string
+): void => {
   const controllersInside: Array<[string, ControllerI]> = [];
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -14,15 +20,15 @@ export const writeController = (controller: ControllerI, pathArray: string[], sd
     controllersInside.push([name, controller]);
   });
 
-  let file = `import { SDKTypes } from '${'../'.repeat(
+  let file = `import { ${sdkTypeName} } from '${'../'.repeat(
     controllersInside.length !== 0 ? pathArray.length : pathArray.length - 1
-  )}dts/src';\n\n`;
+  )}dts/${typeLocation.replace('.ts', '').replace(/^.\//, '')}';\n\n`;
 
   if (controllersInside.length !== 0) {
     createFolder(pathArrayToPath(pathArray, sdkLocation));
     controllersInside.forEach(([ctrlName, ctrl]) => {
       file += `import { ${upperCaseFirstLetterOnly(ctrlName)} } from './${ctrlName.toLocaleLowerCase()}';\n`;
-      writeController(ctrl, [...pathArray, ctrlName], sdkLocation);
+      writeController(ctrl, [...pathArray, ctrlName], sdkLocation, typeLocation, sdkTypeName);
     });
     file += '\n';
   }
@@ -30,7 +36,7 @@ export const writeController = (controller: ControllerI, pathArray: string[], sd
   const className = upperCaseFirstLetterOnly(lastElem(pathArray));
   const typeVar = className + 'T';
 
-  file += `type ${typeVar} = SDKTypes${pathArray.map((p) => `['${p}']`).reduce((a, b) => a + b)};\n\n`;
+  file += `type ${typeVar} = ${sdkTypeName}${pathArray.map((p) => `['${p}']`).reduce((a, b) => a + b)};\n\n`;
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // EXPORT CLASS
