@@ -23,7 +23,8 @@ export const compile = () => {
 
   const cfg = JSON.parse(fs.readFileSync('bridgets.config.json', 'utf-8'));
 
-  runCommand(createDtsFolderCommand(cfg.tsConfigLocation, cfg.typeLocation, cfg.sdkLocation));
+  console.log(createDtsFolderCommand(cfg.tsConfigLocation, cfg.typeLocation, cfg.sdkLocation));
+  //   runCommand(createDtsFolderCommand(cfg.tsConfigLocation, cfg.typeLocation, cfg.sdkLocation));
 
   runCommand(command);
   process.exit(1);
