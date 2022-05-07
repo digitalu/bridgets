@@ -4,7 +4,7 @@ import fs from 'fs';
 const command = 'echo YOOOOO';
 
 const createDtsFolderCommand = (tsConfigLocation: string, typeLocation: string, sdkLocation: string) =>
-  `npx tsc -p ${tsConfigLocation} --declaration --emitDeclarationOnly --rootDir ${typeLocation} --outDir ${sdkLocation}`;
+  `npx tsc -p ${tsConfigLocation} --declaration --emitDeclarationOnly --listFilesOnly ${typeLocation} --outDir ${sdkLocation}`;
 
 const runCommand = (command: string) => {
   try {
@@ -24,7 +24,7 @@ export const compile = () => {
   const cfg = JSON.parse(fs.readFileSync('bridgets.config.json', 'utf-8'));
 
   console.log(createDtsFolderCommand(cfg.tsConfigLocation, cfg.typeLocation, cfg.sdkLocation));
-  //   runCommand(createDtsFolderCommand(cfg.tsConfigLocation, cfg.typeLocation, cfg.sdkLocation));
+  runCommand(createDtsFolderCommand(cfg.tsConfigLocation, cfg.typeLocation, cfg.sdkLocation));
 
   runCommand(command);
   process.exit(1);
