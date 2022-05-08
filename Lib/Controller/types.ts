@@ -1,18 +1,12 @@
 import { ZodSchema } from 'zod';
-import {
-  UnionToIntersection,
-  KeysWithValNotNever,
-  ExcludeNeverKeys,
-  ExtractReturnTypes,
-  BridgeNextFunction,
-  Middleware,
-  GOGO,
-} from '../Utilities';
+import { KeysWithValNotNever, MidsReturnsIntersection } from '../Utilities';
 import { Method } from '../Routes';
 import { FilesConfig } from '../Validators';
 import { Endpoint } from '../Endpoint';
 import formidable from 'formidable';
 import { Request } from 'express';
+
+export type Middleware = (p: Request) => Record<any, any> | void;
 
 type FilesDoNotExists = ['BridgeFilesDoNotExists'];
 
@@ -36,7 +30,8 @@ export interface ControllerI {
     Handler extends (
       p: {
         // MIDDLEWARES
-        [key in KeysWithValNotNever<{ mid: GOGO<Mids> }> & keyof { mid: GOGO<Mids> }]: { mid: GOGO<Mids> }[key];
+        [key in KeysWithValNotNever<{ mid: MidsReturnsIntersection<Mids> }> &
+          keyof { mid: MidsReturnsIntersection<Mids> }]: { mid: MidsReturnsIntersection<Mids> }[key];
       } & {
         // BODY & QUERY & FORMDATA
         [key in KeysWithValNotNever<{
