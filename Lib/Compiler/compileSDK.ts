@@ -1,10 +1,23 @@
 import { BridgeRoutes } from '../Routes';
-import { isController, pathArrayToPath } from '../Utilities';
-import { removeFolder, createFolder } from './fs';
+import { isController, pathArrayToPath, upperCaseFirstLetterOnly } from '../Utilities';
+import { removeFolder, createFolder, writeFile } from './fs';
 import { writeController } from './writeControllers';
 
+let API: any;
+let APIImports = '';
+let controllers: Record<string, number> = {};
+
 export const compileSDK = (routes: BridgeRoutes, sdkLocation: string, typeLocation: string, sdkTypeName: string) => {
+  API = { ...routes };
   visiteRoutes(routes, [], sdkLocation, typeLocation, sdkTypeName);
+
+  // WRITE A CODE TO PRETTIER THAT OBJECT
+  let APIFile =
+    APIImports +
+    '\n' +
+    `export const API = ${JSON.stringify(API).replaceAll(`)"`, `)`).replaceAll(`:"newBridgeTSControllerClient`, `:new`)}`;
+
+  writeFile(`${sdkLocation}/API`, APIFile);
 };
 
 const visiteRoutes = (
@@ -15,11 +28,62 @@ const visiteRoutes = (
   sdkTypeName: string
 ) => {
   Object.entries(routes).forEach(([name, subRouteOrController]) => {
-    if (isController(subRouteOrController))
+    if (isController(subRouteOrController)) {
+      console.log(subRouteOrController.constructor.name);
       writeController(subRouteOrController, [...pathArray, name], sdkLocation, typeLocation, sdkTypeName);
-    else {
+
+      let ctrlName: string;
+      if (controllers[subRouteOrController.constructor.name]) {
+        controllers[subRouteOrController.constructor.name];
+        ctrlName =
+          subRouteOrController.constructor.name + (controllers[subRouteOrController.constructor.name] + 1).toString();
+        controllers[subRouteOrController.constructor.name] += 1;
+        APIImports += `import { ${subRouteOrController.constructor.name} as ${ctrlName} } from '${pathArrayToPath(
+          [...pathArray, name],
+          '.'
+        )}';\n`;
+      } else {
+        ctrlName = subRouteOrController.constructor.name;
+        APIImports += `import { ${ctrlName} } from '${pathArrayToPath([...pathArray, name], '.')}';\n`;
+        controllers[subRouteOrController.constructor.name] = 1;
+      }
+
+      const APIchild = getElemFromObjectWithPathArray(API, pathArray);
+      APIchild[name] = `newBridgeTSControllerClient ${ctrlName}(78)`;
+    } else {
       createFolder(pathArrayToPath([...pathArray, name], sdkLocation));
       visiteRoutes(subRouteOrController, [...pathArray, name], sdkLocation, typeLocation, sdkTypeName);
     }
   });
 };
+
+const getElemFromObjectWithPathArray = (object: any, path: string[]): any => {
+  if (path.length === 0) return object;
+  else return getElemFromObjectWithPathArray(object[path[0]], path.slice(1));
+};
+
+// const test = {
+//   j: {
+//     i: 'gh',
+//     oo: { k: 'ouiiii' },
+//   },
+// };
+
+// console.log(getElemFromObjectWithPathArray(test, ['j', 'oo']));
+
+// class User {}
+// class Tsb {}
+// class T {}
+
+// const tes = {
+//   user: new User(),
+//   'new ass': {
+//     tsb: new Tsb(),
+//     ro: {
+//       t: new T(),
+//     },
+//   },
+//   n: {
+//     t: new T(),
+//   },
+// };

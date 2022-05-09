@@ -1,13 +1,14 @@
-import { User, Test, Test2 } from './Controllers/user';
+import { User, Test, Patate } from './Controllers/user';
 import { RoutesToSDK } from '../Lib';
 
+const test = new Test();
 export const routes = {
-  user: new User(),
-  ass: {
+  [`user`]: new User(),
+  assx: {
     tsb: new User(),
-    ro: { t: new Test() },
+    ro: { t: test },
   },
   n: {
-    t: new Test2(),
+    t: new Patate(),
   },
 };

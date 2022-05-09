@@ -4,7 +4,7 @@ import { ErrorHandler } from '../Errors/types';
 import { validateFiles } from '../Validators';
 import { getJSONDataFromRequestStream } from './bodyJSON';
 import formidable from 'formidable';
-import { compile } from '../Compiler/test';
+import { compile } from '../Compiler';
 import { fetchSdkRoute } from './fetchSDK';
 var argv = require('minimist')(process.argv.slice(2));
 

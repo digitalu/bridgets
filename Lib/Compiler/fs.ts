@@ -9,7 +9,7 @@ export const removeFolder = (location: string) => {
 };
 
 export const createFolder = (path: string) => {
-  console.log('create folder: ', path);
+  console.log('creating folder: ', path);
   try {
     fs.mkdirSync(path);
   } catch (err) {

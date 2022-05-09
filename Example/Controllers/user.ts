@@ -14,7 +14,7 @@ const auth2 = createMiddleware((req) => {
 });
 
 class Invoice extends Controller {
-  kabium = new Test2();
+  kabium = new Patate();
 
   create = this.createEndpoint({
     headers: z.object({ token: z.string() }),
@@ -28,6 +28,7 @@ class Invoice extends Controller {
 const create = createEndpoint({
   method: 'POST',
   // files: apply('image1', 'image3'),
+  body: z.object({ name: z.string() }),
   middlewares: apply(auth2),
   headers: z.object({ token: z.string() }),
   handler: (p) => {
@@ -64,7 +65,7 @@ export class Test extends Controller {
   hhh = new User();
 }
 
-export class Test2 extends Controller {
+export class Patate extends Controller {
   update = this.createEndpoint({
     method: 'PATCH',
     description: 'Yo salut tu vas bien ?',

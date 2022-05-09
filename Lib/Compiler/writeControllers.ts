@@ -1,5 +1,5 @@
 import { ControllerI } from '../Controller';
-import { isController, isEndpoint, upperCaseFirstLetterOnly, lastElem, pathArrayToPath } from '../Utilities';
+import { isController, isEndpoint, getParamsObjectString, pathArrayToPath } from '../Utilities';
 import { createFolder, writeFile } from './fs';
 
 export const writeController = (
@@ -27,13 +27,13 @@ export const writeController = (
   if (controllersInside.length !== 0) {
     createFolder(pathArrayToPath(pathArray, sdkLocation));
     controllersInside.forEach(([ctrlName, ctrl]) => {
-      file += `import { ${upperCaseFirstLetterOnly(ctrlName)} } from './${ctrlName.toLocaleLowerCase()}';\n`;
+      file += `import { ${ctrl.constructor.name} } from './${ctrlName.toLocaleLowerCase()}';\n`;
       writeController(ctrl, [...pathArray, ctrlName], sdkLocation, typeLocation, sdkTypeName);
     });
     file += '\n';
   }
 
-  const className = upperCaseFirstLetterOnly(lastElem(pathArray));
+  const className = (controller as any).constructor.name;
   const typeVar = className + 'T';
 
   file += `type ${typeVar} = ${sdkTypeName}${pathArray.map((p) => `['${p}']`).reduce((a, b) => a + b)};\n\n`;
@@ -43,16 +43,16 @@ export const writeController = (
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   file += `export class ${className} {\n`;
-  controllersInside.forEach(([ctrlName]) => {
-    file += `  public ${ctrlName.toLocaleLowerCase()}: ${upperCaseFirstLetterOnly(ctrlName)};\n`;
+  controllersInside.forEach(([ctrlName, ctrl]) => {
+    file += `  public ${ctrlName.toLocaleLowerCase()}: ${ctrl.constructor.name};\n`;
   });
   file += `  constructor(private Fetch: any) {`;
 
   if (controllersInside.length === 0) file += '}\n';
   else {
     file += '\n';
-    controllersInside.forEach(([ctrlName]) => {
-      file += `    this.${ctrlName.toLocaleLowerCase()} = new ${upperCaseFirstLetterOnly(ctrlName)}(this.Fetch);\n`;
+    controllersInside.forEach(([ctrlName, ctrl]) => {
+      file += `    this.${ctrlName.toLocaleLowerCase()} = new ${ctrl.constructor.name}(this.Fetch);\n`;
     });
     file += '  }\n';
   }
@@ -64,11 +64,19 @@ export const writeController = (
   Object.entries(controller).forEach(([name, endpoint]) => {
     if (!isEndpoint(endpoint)) return;
     if (endpoint.description) file += `\n  /** ${endpoint.description}*/`;
-    file += `\n  public ${name} = (p: { method: '${endpoint.method}'${
-      endpoint.bodySchema ? `; body: ${typeVar}['${name}']['body']` : ''
-    }${endpoint.querySchema ? `; query: ${typeVar}['${name}']['query']` : ''}${
-      endpoint.headersSchema ? `; headers: ${typeVar}['${name}']['headers']` : ''
-    } }): ${typeVar}['${name}']['return'] => {\n    return this.Fetch(p);\n  };\n`;
+
+    const paramsString = [];
+    if (endpoint.bodySchema) paramsString.push(`body: ${typeVar}['${name}']['body']`);
+    if (endpoint.querySchema) paramsString.push(`query: ${typeVar}['${name}']['query']`);
+    if (endpoint.headersSchema) paramsString.push(`headers: ${typeVar}['${name}']['headers']`);
+    if (endpoint.filesConfig) paramsString.push('');
+    const hasParams = paramsString.length > 0;
+
+    file += `\n  public ${name} = (${
+      hasParams ? `p: ${getParamsObjectString(paramsString)}` : ''
+    }): Promise<${typeVar}['${name}']['return']> => {\n    return this.Fetch({ method: '${endpoint.method}'${
+      hasParams ? ', ...p' : ''
+    }});\n  };\n`;
   });
 
   file += `}\n`;
