@@ -3,7 +3,7 @@ import { Method } from '../Routes';
 import { Validator, MethodValidator, ZodValidator, MiddlewareValidator, FilesConfig } from '../Validators';
 import { ZodSchema } from 'zod';
 
-export class Endpoint<SDKHandler extends (...args: any[]) => any> {
+export class Endpoint<SDKHandler extends (...args: any[]) => any, Middlewares extends Readonly<Middleware[]>> {
   public isBridgeEndpoint = true;
 
   public handler: SDKHandler;
@@ -14,6 +14,7 @@ export class Endpoint<SDKHandler extends (...args: any[]) => any> {
   public bodySchema?: ZodSchema;
   public querySchema?: ZodSchema;
   public headersSchema?: ZodSchema;
+  public middlewares: Readonly<Middleware[]>;
 
   public constructor(p: {
     handler: SDKHandler;
@@ -22,7 +23,7 @@ export class Endpoint<SDKHandler extends (...args: any[]) => any> {
     headersSchema?: ZodSchema;
     filesConfig?: FilesConfig;
     method: Method;
-    middlewares?: Readonly<Middleware[]>;
+    middlewares?: Middlewares;
     description?: string;
   }) {
     this.handler = p.handler;
@@ -39,6 +40,7 @@ export class Endpoint<SDKHandler extends (...args: any[]) => any> {
 
     if (p.middlewares) p.middlewares.forEach((midlw) => (validator = validator.setNext(new MiddlewareValidator(midlw))));
 
+    this.middlewares = p.middlewares || ([] as const);
     this.validator = firstValidator;
 
     this.description = p.description;

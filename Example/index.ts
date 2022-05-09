@@ -5,7 +5,7 @@ import express from 'express';
 const app = express();
 
 const errorHandler = onError(({ error, req, path, mdlwData }) => {
-  if (error.name === 'Internal server error') console.log(); // Send to bug reporting
+  if (error.name === 'Internal server error') console.log(error); // Send to bug reporting
   else console.log('Other error', error, path, mdlwData);
 });
 
@@ -18,3 +18,5 @@ app.listen(8077, () => {
 });
 
 export type SDKTest = RoutesToSDK<typeof routes>;
+
+let t: SDKTest['user']['update']['return'];

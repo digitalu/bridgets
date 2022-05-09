@@ -1,10 +1,9 @@
 var fs = require('fs');
 var path = require('path');
 import { createMinifier } from './dtsMinifier';
-import * as ts from 'typescript';
 
 // setup (provide a TS Compiler API object)
-const minifier = createMinifier(ts);
+const minifier = createMinifier();
 
 function copyFileSync(source: any, target: any) {
   var targetFile = target;

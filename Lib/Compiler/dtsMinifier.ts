@@ -1,3 +1,5 @@
+import ts from 'typescript';
+
 // Originally cloned from https://github.com/dsherret/dts_minify
 
 /**
@@ -27,7 +29,7 @@ const newLineCharCode = '\n'.charCodeAt(0);
 // todo: type the `ts` import (maybe with a local type that defines the expected compiler API structure)
 
 /** Creates a minifier that should be stored and then used to minify one or more files. */
-export function createMinifier(ts: any): Minifier {
+export function createMinifier(): Minifier {
   const scanner = ts.createScanner(ts.ScriptTarget.Latest, /* skipTrivia */ false, ts.LanguageVariant.Standard);
 
   return {
@@ -66,10 +68,10 @@ export function createMinifier(ts: any): Minifier {
         default:
           // use a newline where ASI is probable
           if (
-            currentToken === ts.SyntaxKind.Identifier &&
+            // currentToken === ts.SyntaxKind.Identifier &&
             lastHadSeparatingNewLine &&
             lastWrittenToken !== ts.SyntaxKind.SemicolonToken &&
-            lastWrittenToken !== ts.SyntaxKind.CloseBraceToken &&
+            // lastWrittenToken !== ts.SyntaxKind.CloseBraceToken &&
             lastWrittenToken !== ts.SyntaxKind.OpenBraceToken &&
             lastWrittenToken !== ts.SyntaxKind.OpenParenToken &&
             lastWrittenToken !== ts.SyntaxKind.CommaToken &&

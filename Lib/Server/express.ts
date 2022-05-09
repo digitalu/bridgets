@@ -5,6 +5,7 @@ import { validateFiles } from '../Validators';
 import { getJSONDataFromRequestStream } from './bodyJSON';
 import formidable from 'formidable';
 import { compile } from '../Compiler/test';
+import { fetchSdkRoute } from './fetchSDK';
 var argv = require('minimist')(process.argv.slice(2));
 
 export const createExpressMiddleware = (routes: BridgeRoutes, onError?: ErrorHandler) => {
@@ -16,6 +17,11 @@ export const createExpressMiddleware = (routes: BridgeRoutes, onError?: ErrorHan
     let validation: any = {};
 
     try {
+      if (req.path === '/fetchBridgeSDK') {
+        fetchSdkRoute(req, res);
+        return;
+      }
+
       const route = serverRoutes[req.path];
       if (!route) return next();
 
@@ -42,7 +48,8 @@ export const createExpressMiddleware = (routes: BridgeRoutes, onError?: ErrorHan
 
           result = validateFiles(route.filesConfig || 'any', files);
 
-          if (!result) result = await route.handler({ headers: req.headers, query: req.query, files, ...validation });
+          if (!result)
+            result = (await route.handler({ headers: req.headers, query: req.query, files, ...validation })) || ''; // To transform void return into empty string
 
           if (result.error) {
             onError?.({
@@ -57,7 +64,7 @@ export const createExpressMiddleware = (routes: BridgeRoutes, onError?: ErrorHan
           typeof result === 'object' ? res.json(result) : res.send(result);
         });
       } else {
-        result = await route.handler({ headers: req.headers, body: req.body, query: req.query, ...validation });
+        result = (await route.handler({ headers: req.headers, body: req.body, query: req.query, ...validation })) || ''; // To transform void return into empty string
 
         if (result.error) {
           onError?.({

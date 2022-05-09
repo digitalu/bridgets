@@ -7,7 +7,7 @@ const auth = createMiddleware((req) => ({ YES: req.headers.trailer }));
 const auth3 = (req: Request) => ({ YESEE: { oui: true } });
 
 const auth2 = createMiddleware((req) => {
-  if (req.headers.token) return createHttpError('Bad Request', 'AH', { dsdf: true });
+  if (req.headers.token) return createHttpError('Bad Request', 'AH', 'oui oui');
 
   if (req.headers) return { user: { name: 'Nab', age: 78 } };
   else return { association: { admins: ['Nab'] } };
@@ -17,13 +17,9 @@ class Invoice extends Controller {
   kabium = new Test2();
 
   create = this.createEndpoint({
-    method: 'PATCH',
-    body: z.object({
-      name: z.string(),
-      test: z.number(),
-      j: z.object({ k: z.number() }),
-    }),
-    handler: (p) => {
+    headers: z.object({ token: z.string() }),
+    handler: ({ headers }) => {
+      if (headers.token === 'my_secret_password') return headers;
       return 'HEY' as const;
     },
   });
@@ -32,6 +28,7 @@ class Invoice extends Controller {
 const create = createEndpoint({
   method: 'POST',
   // files: apply('image1', 'image3'),
+  middlewares: apply(auth2),
   headers: z.object({ token: z.string() }),
   handler: (p) => {
     return p.headers;
@@ -47,13 +44,14 @@ export class User extends Controller {
     method: 'PATCH',
     description: 'Yo salut tu vas bien ?',
     // body: z.object({ name: z.string() }),
-    middlewares: apply(auth),
+    // middlewares: apply(auth),
     handler: (p) => {
       if (p) console.log();
+      return ',,';
 
-      const d = this.create.handler;
-      throw new Error('Yo tu vas bien?');
-      return { d: 7 / 0 };
+      // const d = this.create.handler;
+      // throw new Error('Yo tu vas bien?');
+      // return { d: 7 / 0 };
     },
   });
 }
@@ -71,9 +69,9 @@ export class Test2 extends Controller {
     method: 'PATCH',
     description: 'Yo salut tu vas bien ?',
     body: z.object({ name: z.string() }),
-    middlewares: apply(auth, auth2, auth3),
+    middlewares: apply(),
     handler: (p) => {
-      if (!p.mid.association) p.mid.user.age;
+      // if (!p.mid.association) p.mid.user.age;
     },
   });
 }

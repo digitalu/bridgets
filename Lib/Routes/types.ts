@@ -1,5 +1,6 @@
 import { ControllerI } from '../Controller/';
 import { Endpoint } from '../Endpoint';
+import { MidsErrorReturnsIntersection } from '../Utilities';
 import { Validator, FilesConfig } from '../Validators';
 
 export type BridgeRoutes = { [key: string | number | symbol]: BridgeRoutes | ControllerI };
@@ -15,12 +16,12 @@ export interface ServerRoutes {
 export type Method = 'POST' | 'PATCH' | 'GET' | 'DELETE' | 'PUT';
 
 type ControllerSDK<T extends ControllerI> = {
-  [key in keyof T]: T[key] extends Endpoint<infer SDKFct>
+  [key in keyof T]: T[key] extends Endpoint<infer SDKFct, infer Middlewares>
     ? {
         body: Parameters<SDKFct>[0]['body'];
         query: Parameters<SDKFct>[0]['query'];
         headers: Parameters<SDKFct>[0]['headers'];
-        return: ReturnType<SDKFct>;
+        return: ReturnType<SDKFct> | MidsErrorReturnsIntersection<Middlewares>;
       }
     : T[key] extends ControllerI
     ? ControllerSDK<T[key]>

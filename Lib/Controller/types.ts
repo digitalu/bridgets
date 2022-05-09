@@ -74,7 +74,7 @@ export interface ControllerI {
     Meth extends Method = 'POST'
   >(
     p: RouteParams<Body, Query, Mids, Handler, Meth, Headers, Files>
-  ) => Endpoint<Handler>;
+  ) => Endpoint<Handler, Mids>;
 }
 
 // export interface ControllerInterface {

@@ -11,11 +11,20 @@ type Values<T> = T[keyof T];
 type Unfoo<T> = T extends { foo: any } ? T['foo'] : never;
 
 type RemoveError<T> = T extends { error: any } ? never : T;
-type NFoo<T extends Readonly<any[]>> = {
+
+type KeepError<T> = T extends { error: any } ? T : never;
+
+type NFooWithoutError<T extends Readonly<any[]>> = {
   [K in keyof T]: T[K] extends (...args: any) => any ? { foo: RemoveError<ReturnType<T[K]>> } : never;
 };
 
-export type MidsReturnsIntersection<T extends Readonly<any[]>> = Unfoo<UnionToIntersection<Values<NFoo<T>>>>;
+type NFooOnlyError<T extends Readonly<any[]>> = {
+  [K in keyof T]: T[K] extends (...args: any) => any ? { foo: KeepError<ReturnType<T[K]>> } : never;
+};
+
+export type MidsReturnsIntersection<T extends Readonly<any[]>> = Unfoo<UnionToIntersection<Values<NFooWithoutError<T>>>>;
+
+export type MidsErrorReturnsIntersection<T extends Readonly<any[]>> = Unfoo<UnionToIntersection<Values<NFooOnlyError<T>>>>;
 
 type UnionToOvlds<U> = UnionToIntersection<U extends any ? (f: U) => void : never>;
 
