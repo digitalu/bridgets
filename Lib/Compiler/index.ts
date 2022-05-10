@@ -7,7 +7,7 @@ import fs from 'fs';
 const command = 'echo Compilation done';
 
 const createDtsFolderCommand = (tsConfigLocation: string, sdkLocation: string) =>
-  `npx tsc -p ${tsConfigLocation} --declaration --emitDeclarationOnly --outDir ${sdkLocation}`;
+  `npx tsc -p ${tsConfigLocation} --declaration --emitDeclarationOnly --resolveJsonModule --outDir ${sdkLocation}`;
 
 const runCommand = (command: string) => {
   try {
