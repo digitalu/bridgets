@@ -1,6 +1,6 @@
 {
   "name": "bridgets",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "",
   "main": "dist/Lib/index.js",
   "types": "dist/Lib/index.d.ts",
