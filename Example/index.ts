@@ -17,6 +17,6 @@ app.listen(8077, () => {
   console.log(`Server listening on port ${8077}, project: ${'YELLA'}, mode: ${'ENV'}`);
 });
 
-export type SDKTest = RoutesToSDK<typeof routes>;
+export type SDKType = RoutesToSDK<typeof routes>;
 
-let t: SDKTest['user']['update']['return'];
+let t: SDKType['user']['update']['return'];
