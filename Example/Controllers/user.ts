@@ -47,7 +47,7 @@ export class User extends Controller {
     // body: z.object({ name: z.string() }),
     // middlewares: apply(auth),
     handler: (p) => {
-      if (p) console.log();
+      if (p) console.log('AH');
       return ',,';
 
       // const d = this.create.handler;
@@ -69,9 +69,10 @@ export class Patate extends Controller {
   update = this.createEndpoint({
     method: 'PATCH',
     description: 'Yo salut tu vas bien ?',
-    body: z.object({ name: z.string() }),
-    middlewares: apply(),
+    files: apply('image1', 'file'),
     handler: (p) => {
+      console.log(p);
+      return 'ok';
       // if (!p.mid.association) p.mid.user.age;
     },
   });

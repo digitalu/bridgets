@@ -1,6 +1,6 @@
 import { Middleware } from '../Controller';
 import { Method } from '../Routes';
-import { Validator, MethodValidator, ZodValidator, MiddlewareValidator, FilesConfig } from '../Validators';
+import { Validator, MethodValidator, ZodValidator, MiddlewareValidator, FilesConfig, FilesValidator } from '../Validators';
 import { ZodSchema } from 'zod';
 
 export class Endpoint<SDKHandler extends (...args: any[]) => any, Middlewares extends Readonly<Middleware[]>> {
@@ -14,7 +14,6 @@ export class Endpoint<SDKHandler extends (...args: any[]) => any, Middlewares ex
   public bodySchema?: ZodSchema;
   public querySchema?: ZodSchema;
   public headersSchema?: ZodSchema;
-  public middlewares: Readonly<Middleware[]>;
 
   public constructor(p: {
     handler: SDKHandler;
@@ -37,10 +36,9 @@ export class Endpoint<SDKHandler extends (...args: any[]) => any, Middlewares ex
     if (p.bodySchema) validator = validator.setNext(new ZodValidator(p.bodySchema, 'body'));
     if (p.querySchema) validator = validator.setNext(new ZodValidator(p.querySchema, 'query'));
     if (p.headersSchema) validator = validator.setNext(new ZodValidator(p.headersSchema, 'headers'));
-
+    if (p.filesConfig) validator = validator.setNext(new FilesValidator(p.filesConfig));
     if (p.middlewares) p.middlewares.forEach((midlw) => (validator = validator.setNext(new MiddlewareValidator(midlw))));
 
-    this.middlewares = p.middlewares || ([] as const);
     this.validator = firstValidator;
 
     this.description = p.description;

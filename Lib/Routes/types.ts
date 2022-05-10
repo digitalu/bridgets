@@ -35,5 +35,3 @@ export type RoutesToSDK<T extends BridgeRoutes> = {
     ? RoutesToSDK<T[key]>
     : never;
 };
-
-export type SDKRoutes = { [key: string]: SDKRoutes | { body: any; query: any; headers: any; return: any } };

@@ -73,13 +73,23 @@ export const writeController = (
     if (endpoint.bodySchema) paramsString.push(`body: ${typeVar}['${name}']['body']`);
     if (endpoint.querySchema) paramsString.push(`query: ${typeVar}['${name}']['query']`);
     if (endpoint.headersSchema) paramsString.push(`headers: ${typeVar}['${name}']['headers']`);
-    if (endpoint.filesConfig) paramsString.push('');
+    if (endpoint.filesConfig) {
+      if (endpoint.filesConfig === 'any') paramsString.push('files: Record<string, File>');
+      else
+        paramsString.push(
+          `files: {${endpoint.filesConfig
+            .map((f) => ` ${f}: File;`)
+            .reduce((a, b) => a + b)
+            .slice(0, -1)} }`,
+          ''
+        );
+    }
     const hasParams = paramsString.length > 0;
 
     file += `\n  public ${name} = (${
       hasParams ? `p: ${getParamsObjectString(paramsString)}` : ''
     }): Promise<${typeVar}['${name}']['return']> => {\n    return this.Fetch({ method: '${endpoint.method}'${
-      hasParams ? ', ...p' : ''
+      hasParams ? ', ...p ' : ''
     }});\n  };\n`;
   });
 

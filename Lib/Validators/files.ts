@@ -1,12 +1,21 @@
-import formidable from 'formidable';
+import { AbstractValidator } from './validator';
 import { FilesConfig } from './types';
 import { createHttpError } from '../Errors';
+import { Request } from 'express';
 
-export const validateFiles = (config: FilesConfig, files: formidable.Files) => {
-  const missingFiles: string[] = [];
-  if (config !== 'any') for (const name of config) if (!files[name]) missingFiles.push(name);
+export class FilesValidator extends AbstractValidator {
+  constructor(private config: FilesConfig) {
+    super();
+  }
 
-  if (missingFiles.length > 0)
-    return createHttpError('Unprocessable entity', "You didn't send all required files", { missingFiles });
-  return undefined;
-};
+  public async validate(req: Request, data: Record<any, any>): Promise<Record<any, any>> {
+    const missingFiles: string[] = [];
+
+    // req.body contains the files
+    if (this.config !== 'any') for (const name of this.config) if (!req.body[name]) missingFiles.push(name);
+
+    if (missingFiles.length > 0)
+      return createHttpError('Unprocessable entity', "You didn't send all required files", { missingFiles });
+    return await super.validate(req, data);
+  }
+}
