@@ -11,4 +11,5 @@ export const routes = {
   n: {
     t: new Patate(),
   },
+  straight: new Patate(),
 };

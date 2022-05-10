@@ -61,29 +61,3 @@ const getElemFromObjectWithPathArray = (object: any, path: string[]): any => {
   if (path.length === 0) return object;
   else return getElemFromObjectWithPathArray(object[path[0]], path.slice(1));
 };
-
-// const test = {
-//   j: {
-//     i: 'gh',
-//     oo: { k: 'ouiiii' },
-//   },
-// };
-
-// console.log(getElemFromObjectWithPathArray(test, ['j', 'oo']));
-
-// class User {}
-// class Tsb {}
-// class T {}
-
-// const tes = {
-//   user: new User(),
-//   'new ass': {
-//     tsb: new Tsb(),
-//     ro: {
-//       t: new T(),
-//     },
-//   },
-//   n: {
-//     t: new T(),
-//   },
-// };
