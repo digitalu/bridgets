@@ -1,10 +1,8 @@
 import { execSync } from 'child_process';
 import { copyTypesAndMinify } from './copyModuleTypes';
 import { compileSDK } from './compileSDK';
-import { removeFolder } from './fs';
 import { BridgeRoutes } from '../Routes';
 import fs from 'fs';
-import { askForConfig } from './askForConfig';
 
 const command = 'echo Compilation done';
 
@@ -21,15 +19,12 @@ const runCommand = (command: string) => {
   return true;
 };
 
-export const compile = async (routes: BridgeRoutes) => {
-  if (!fs.existsSync('bridgets.config.json')) {
-    await askForConfig();
-    throw new Error('No bridgets config file found');
-  }
+export const compile = (routes: BridgeRoutes) => {
+  if (!fs.existsSync('bridgets.config.json')) throw new Error('No Config');
 
   const cfg = JSON.parse(fs.readFileSync('bridgets.config.json', 'utf-8'));
 
-  if (fs.existsSync(cfg.sdkLocation)) removeFolder(cfg.sdkLocation);
+  if (fs.existsSync(cfg.sdkLocation)) fs.rmSync(cfg.sdkLocation, { recursive: true });
 
   runCommand(createDtsFolderCommand(cfg.tsConfigLocation, `${cfg.sdkLocation}/dts`));
 
