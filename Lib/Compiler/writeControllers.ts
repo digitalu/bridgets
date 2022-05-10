@@ -20,10 +20,8 @@ export const writeController = (
     controllersInside.push([name, controller]);
   });
 
-  // let file = `import { ${sdkTypeName} } from '${'../'.repeat(
-  //   controllersInside.length !== 0 ? pathArray.length : pathArray.length - 1
-  // )}dts/${typeLocation.replace('.ts', '').replace(/^.\//, '')}';\n\n`;
-
+  // writing the import of type from dts file
+  // It handles index files and first stage file
   let file = `import { ${sdkTypeName} } from '${
     controllersInside.length === 0 && pathArray.length === 1
       ? './'
