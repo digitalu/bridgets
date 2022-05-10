@@ -3,6 +3,7 @@ import { copyTypesAndMinify } from './copyModuleTypes';
 import { compileSDK } from './compileSDK';
 import { BridgeRoutes } from '../Routes';
 import fs from 'fs';
+import { createOrUpdateBridgeConfigFile } from './createConfigFile';
 
 const command = 'echo Compilation done';
 
@@ -20,7 +21,10 @@ const runCommand = (command: string) => {
 };
 
 export const compile = (routes: BridgeRoutes) => {
-  if (!fs.existsSync('bridgets.config.json')) throw new Error('No Config');
+  if (!fs.existsSync('bridgets.config.json')) {
+    createOrUpdateBridgeConfigFile();
+    throw new Error('No Config');
+  }
 
   const cfg = JSON.parse(fs.readFileSync('bridgets.config.json', 'utf-8'));
 
