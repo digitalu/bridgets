@@ -25,11 +25,10 @@ class Invoice extends Controller {
   });
 }
 
+const consoleMethod = createMiddleware((req) => console.log('method: ', req.method));
+
 const create = createEndpoint({
-  method: 'POST',
-  files: 'any',
-  // body: z.object({ name: z.string() }),
-  middlewares: apply(auth2),
+  middlewares: apply(consoleMethod),
   headers: z.object({ token: z.string() }),
   handler: (p) => {
     return p.headers;

@@ -27,7 +27,7 @@ export const createExpressMiddleware = (routes: BridgeRoutes, onError?: ErrorHan
       if (route.filesConfig) req.body = await formidableAsyncParseFiles(req);
       else req.body = await getJSONDataFromRequestStream(req);
 
-      if (route.validator) validation = await route.validator.validate(req, {});
+      if (route.validator) validation = (await route.validator.validate(req, {})) || {};
 
       if (validation.error) {
         onError?.({
