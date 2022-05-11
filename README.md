@@ -7,7 +7,7 @@
 
 <p align="center">
   <a aria-label="License" href="">
-    <img alt="license" src="http://bridgets.co/assets/license.svg" />
+    <img alt="license" src="http://bridgets.co/assets/license.svg" height="24" />
   </a>
   <a aria-label="Join the community on Discord" href="https://discord.gg/8TjNYgKuta">
     <img alt="community" src="http://bridgets.co/assets/community.svg" height="24" />
