@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://bridgets.co">
-    <img src="http://bridgets.co/asstes/logo.svg" height="48" />
+    <img src="http://bridgets.co/assets/logo-short.svg" height="48" />
     <h1 align="center">BridgeTS</h1>
   </a>
 </p>
