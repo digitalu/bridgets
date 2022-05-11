@@ -1,6 +1,6 @@
 /dist
 /node_modules
-/sdkTest
+/sdk
 
 # Logs
 logs

@@ -4,6 +4,11 @@ import express from 'express';
 
 const app = express();
 
+app.use('', (req, res, next) => {
+  console.log(req.path);
+  next();
+});
+
 const errorHandler = onError(({ error, req, path, mdlwData }) => {
   if (error.name === 'Internal server error') console.log(error); // Send to bug reporting
   else console.log('Other error', error, path, mdlwData);

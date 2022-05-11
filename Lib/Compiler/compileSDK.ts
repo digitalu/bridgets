@@ -13,11 +13,12 @@ export const compileSDK = (routes: BridgeRoutes, sdkLocation: string, typeLocati
 
   // WRITE A CODE TO PRETTIER THAT OBJECT
   let APIFile =
+    "import { Fetch } from './fetchBridgeTS'\n\n" +
     APIImports +
     '\n' +
     `export const API = ${JSON.stringify(API).replaceAll(`)"`, `)`).replaceAll(`:"newBridgeTSControllerClient`, `:new`)}`;
 
-  writeFile(`${sdkLocation}/API`, APIFile);
+  writeFile(`${sdkLocation}/index`, APIFile);
 };
 
 const visiteRoutes = (
@@ -49,7 +50,7 @@ const visiteRoutes = (
       }
 
       const APIchild = getElemFromObjectWithPathArray(API, pathArray);
-      APIchild[name] = `newBridgeTSControllerClient ${ctrlName}(78)`;
+      APIchild[name] = `newBridgeTSControllerClient ${ctrlName}(Fetch)`;
     } else {
       createFolder(pathArrayToPath([...pathArray, name], sdkLocation));
       visiteRoutes(subRouteOrController, [...pathArray, name], sdkLocation, typeLocation, sdkTypeName);

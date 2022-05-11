@@ -1,1 +1,1 @@
-{"tsConfigLocation":"./tsconfig.json","sdkLocation":"./sdk"}
+{ "tsConfigLocation": "./tsconfig.json", "sdkLocation": "./sdk", "typeLocation": "./Example/index.ts" }

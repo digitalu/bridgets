@@ -2,7 +2,9 @@ import { execSync } from 'child_process';
 import { copyTypesAndMinify } from './copyModuleTypes';
 import { compileSDK } from './compileSDK';
 import { BridgeRoutes } from '../Routes';
+import { writeFile } from './fs';
 import fs from 'fs';
+import { fetchFile } from './fetchFile';
 import { createOrUpdateBridgeConfigFile } from './createConfigFile';
 
 const command = 'echo Compilation done';
@@ -34,7 +36,9 @@ export const compile = (routes: BridgeRoutes) => {
 
   copyTypesAndMinify(cfg.sdkLocation);
 
-  compileSDK(routes, cfg.sdkLocation, cfg.typeLocation, cfg.sdkTypeName);
+  compileSDK(routes, cfg.sdkLocation, cfg.typeLocation, 'SDKTypes');
+
+  writeFile(`${cfg.sdkLocation}/fetchBridgeTS`, fetchFile);
 
   runCommand(command);
   process.exit(1);

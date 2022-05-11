@@ -27,8 +27,8 @@ class Invoice extends Controller {
 
 const create = createEndpoint({
   method: 'POST',
-  // files: apply('image1', 'image3'),
-  body: z.object({ name: z.string() }),
+  files: 'any',
+  // body: z.object({ name: z.string() }),
   middlewares: apply(auth2),
   headers: z.object({ token: z.string() }),
   handler: (p) => {

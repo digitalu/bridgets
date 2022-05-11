@@ -88,9 +88,9 @@ export const writeController = (
 
     file += `\n  public ${name} = (${
       hasParams ? `p: ${getParamsObjectString(paramsString)}` : ''
-    }): Promise<${typeVar}['${name}']['return']> => {\n    return this.Fetch({ method: '${endpoint.method}'${
-      hasParams ? ', ...p ' : ''
-    }});\n  };\n`;
+    }): Promise<${typeVar}['${name}']['return']> => {\n    return this.Fetch({ path: '${[...pathArray, name]
+      .map((p) => `/${p}`)
+      .reduce((a, b) => a + b)}', method: '${endpoint.method}'${hasParams ? ', ...p ' : ''}});\n  };\n`;
   });
 
   file += `}\n`;
