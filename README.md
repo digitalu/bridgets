@@ -1,16 +1,16 @@
 <p align="center">
   <a href="https://bridgets.co">
-    <img src="https://bridge-website-seven.vercel.app/logo.svg" height="48" />
+    <img src="http://bridgets.co/asstes/logo.svg" height="48" />
     <h1 align="center">BridgeTS</h1>
   </a>
 </p>
 
 <p align="center">
   <a aria-label="License" href="">
-    <img alt="" src="https://img.shields.io/npm/l/next.svg?style=for-the-badge&labelColor=000000" />
+    <img alt="license" src="http://bridgets.co/assets/license.svg" />
   </a>
   <a aria-label="Join the community on Discord" href="https://discord.gg/8TjNYgKuta">
-    <img src="https://bridge-website-seven.vercel.app/icons/socials/discord.svg" height="24" />
+    <img alt="community" src="http://bridgets.co/assets/community.svg" height="24" />
   </a>
 </p>
 
@@ -43,7 +43,7 @@ To integrate into an existing Express.js app <a href=""> View the full documenta
 
 ## Documentation
 
-Visit [https://bridge-website-seven.vercel.app/documentation](https://bridge-website-seven.vercel.app/documentation) to view the full documentation.
+Visit [http://bridgets.co/documentation](http://bridgets.co/documentation) to view the full documentation.
 
 ## Community
 
