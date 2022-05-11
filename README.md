@@ -1,13 +1,13 @@
 <p align="center">
   <a href="https://bridgets.co">
-    <img src="http://bridgets.co/assets/logo-short.svg" height="48" />
+    <img src="http://bridgets.co/asses/logo.svg" height="48" />
     <h1 align="center">BridgeTS</h1>
   </a>
 </p>
 
 <p align="center">
   <a aria-label="License" href="">
-    <img alt="license" src="http://bridgets.co/assets/license.svg" height="24" />
+    <img alt="license" src="http://bridgets.co/assets/license.svg" />
   </a>
   <a aria-label="Join the community on Discord" href="https://discord.gg/8TjNYgKuta">
     <img alt="community" src="http://bridgets.co/assets/community.svg" height="24" />
@@ -21,6 +21,8 @@ BridgeTs is a new Node.js framework built on Express.js that uses the power of T
 In other words, its goal is that the backend developers won't have to manually write API documentation or to maintain a Postman collection to keep the client up-to-date with the API.
 
 ## Getting Started
+
+A more detailed tutorial can be found on the <a href="https://bridgets.co"> https://bridgets.co </a> website. 
 
 We recommend creating a new **BridgeTS** app using *create-bridgeTS-app*, which sets up everything automatically for you. 
 
@@ -43,7 +45,7 @@ To integrate into an existing Express.js app <a href=""> View the full documenta
 
 ## Documentation
 
-Visit [http://bridgets.co/documentation](http://bridgets.co/documentation) to view the full documentation.
+Visit [https://bridgets.co/documentation](https://bridgets.co/documentation) to view the full documentation.
 
 ## Community
 
