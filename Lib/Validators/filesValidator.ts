@@ -1,14 +1,14 @@
-import { AbstractValidator } from './validator';
-import { FilesConfig } from './types';
+import { AbstractValidator, ValidateFN } from './validator';
 import { createHttpError } from '../Errors';
-import { Request } from 'express';
+
+export type FilesConfig = ReadonlyArray<string> | 'any';
 
 export class FilesValidator extends AbstractValidator {
   constructor(private config: FilesConfig) {
     super();
   }
 
-  public async validate(req: Request, data: Record<any, any>): Promise<Record<any, any>> {
+  public validate: ValidateFN = async (req, data) => {
     const missingFiles: string[] = [];
 
     // req.body contains the files
@@ -16,6 +16,6 @@ export class FilesValidator extends AbstractValidator {
 
     if (missingFiles.length > 0)
       return createHttpError('Unprocessable entity', "You didn't send all required files", { missingFiles });
-    return await super.validate(req, data);
-  }
+    return super.validate(req, data);
+  };
 }

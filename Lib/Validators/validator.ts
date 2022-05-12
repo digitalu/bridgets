@@ -1,5 +1,13 @@
 import { Request } from 'express';
-import { Validator } from './types';
+
+export type ValidateFN = (req: Request, data: Record<any, any>) => Promise<Record<any, any>>;
+
+export interface Validator {
+  setNext(handler: Validator): Validator;
+
+  validate: ValidateFN;
+}
+
 /**
  * The default chaining behavior is implemented inside a base handler class.
  */

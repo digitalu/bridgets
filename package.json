@@ -43,6 +43,8 @@
     "formidable": "^2.0.1",
     "minimist": "^1.2.6",
     "readline-sync": "^1.4.10",
+    "superstruct": "^0.15.4",
+    "yup": "^0.32.11",
     "zod": "^3.14.4"
   },
   "devDependencies": {

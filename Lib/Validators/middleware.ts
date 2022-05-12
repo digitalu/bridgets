@@ -1,16 +1,15 @@
-import { Request } from 'express';
-import { AbstractValidator } from './validator';
+import { AbstractValidator, ValidateFN } from './validator';
 
 export class MiddlewareValidator extends AbstractValidator {
   constructor(private middleware: any) {
     super();
   }
 
-  public async validate(req: Request, data: Record<any, any>): Promise<Record<any, any>> {
+  public validate: ValidateFN = async (req, data) => {
     const result = (await this.middleware(req)) || {};
 
     if (result.error) return { error: result.error };
 
     return await super.validate(req, { ...data, ...result });
-  }
+  };
 }

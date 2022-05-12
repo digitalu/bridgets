@@ -1,6 +1,5 @@
 import { Method } from '../Routes';
-import { Request } from 'express';
-import { AbstractValidator } from './validator';
+import { AbstractValidator, ValidateFN } from './validator';
 import { createHttpError } from '../Errors';
 
 export class MethodValidator extends AbstractValidator {
@@ -8,9 +7,9 @@ export class MethodValidator extends AbstractValidator {
     super();
   }
 
-  public async validate(req: Request, data: Record<any, any>): Promise<Record<any, any>> {
+  public validate: ValidateFN = async (req, data) => {
     if (req.method !== this.method) return createHttpError('Not Found', 'Wrong method', { method: this.method });
 
     return await super.validate(req, data);
-  }
+  };
 }

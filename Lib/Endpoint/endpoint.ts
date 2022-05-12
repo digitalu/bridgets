@@ -1,7 +1,14 @@
 import { Middleware } from '../Controller';
 import { Method } from '../Routes';
-import { Validator, MethodValidator, ZodValidator, MiddlewareValidator, FilesConfig, FilesValidator } from '../Validators';
-import { ZodSchema } from 'zod';
+import {
+  Validator,
+  MethodValidator,
+  MiddlewareValidator,
+  FilesConfig,
+  FilesValidator,
+  BValidator,
+  BridgeParser,
+} from '../Validators';
 
 export class Endpoint<SDKHandler extends (...args: any[]) => any, Middlewares extends Readonly<Middleware[]>> {
   public isBridgeEndpoint = true;
@@ -11,15 +18,15 @@ export class Endpoint<SDKHandler extends (...args: any[]) => any, Middlewares ex
   public description?: string;
   public method: Method;
   public filesConfig?: FilesConfig;
-  public bodySchema?: ZodSchema;
-  public querySchema?: ZodSchema;
-  public headersSchema?: ZodSchema;
+  public bodySchema?: BridgeParser;
+  public querySchema?: BridgeParser;
+  public headersSchema?: BridgeParser;
 
   public constructor(p: {
     handler: SDKHandler;
-    bodySchema?: ZodSchema;
-    querySchema?: ZodSchema;
-    headersSchema?: ZodSchema;
+    bodySchema?: BridgeParser;
+    querySchema?: BridgeParser;
+    headersSchema?: BridgeParser;
     filesConfig?: FilesConfig;
     method: Method;
     middlewares?: Middlewares;
@@ -33,9 +40,9 @@ export class Endpoint<SDKHandler extends (...args: any[]) => any, Middlewares ex
     const firstValidator: Validator = new MethodValidator(p.method);
     let validator = firstValidator;
 
-    if (p.bodySchema) validator = validator.setNext(new ZodValidator(p.bodySchema, 'body'));
-    if (p.querySchema) validator = validator.setNext(new ZodValidator(p.querySchema, 'query'));
-    if (p.headersSchema) validator = validator.setNext(new ZodValidator(p.headersSchema, 'headers'));
+    if (p.bodySchema) validator = validator.setNext(new BValidator(p.bodySchema, 'body'));
+    if (p.querySchema) validator = validator.setNext(new BValidator(p.querySchema, 'query'));
+    if (p.headersSchema) validator = validator.setNext(new BValidator(p.headersSchema, 'headers'));
     if (p.filesConfig) validator = validator.setNext(new FilesValidator(p.filesConfig));
     if (p.middlewares) p.middlewares.forEach((midlw) => (validator = validator.setNext(new MiddlewareValidator(midlw))));
 

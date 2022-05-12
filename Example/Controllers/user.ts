@@ -1,6 +1,8 @@
 import { Controller, createMiddleware, createHttpError, createEndpoint, apply } from '../../Lib';
 import { Request } from 'express';
 import { z } from 'zod';
+import * as s from 'superstruct';
+import * as yup from 'yup';
 
 const auth = createMiddleware((req) => ({ YES: req.headers.trailer }));
 
@@ -17,9 +19,9 @@ class Invoice extends Controller {
   kabium = new Patate();
 
   create = this.createEndpoint({
-    headers: z.object({ token: z.string() }),
-    handler: ({ headers }) => {
-      if (headers.token === 'my_secret_password') return headers;
+    query: yup.object({ token: yup.string().required() }),
+    handler: ({ query }) => {
+      if (query.token === 'my_secret_password') return query;
       return 'HEY' as const;
     },
   });
@@ -29,9 +31,11 @@ const consoleMethod = createMiddleware((req) => console.log('method: ', req.meth
 
 const create = createEndpoint({
   middlewares: apply(consoleMethod),
-  headers: z.object({ token: z.string() }),
+  body: s.object({ nana: s.string() }),
+  query: yup.object({ token: yup.string().required() }),
   handler: (p) => {
-    return p.headers;
+    // p.query.
+    return p;
   },
 });
 
