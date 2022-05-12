@@ -34,6 +34,7 @@ type UnionToArray<T, A extends unknown[] = []> = IsUnion<T> extends true
   ? UnionToArray<Exclude<T, PopUnion<T>>, [PopUnion<T>, ...A]>
   : [T, ...A];
 
+// Transform the parameters into a const readonly array
 export type Apply = <B extends string | Middleware, T extends Array<B>>(
   ...args: T
 ) => B extends string ? UnionToArray<T[number]> : UnionToArray<T[number]>;

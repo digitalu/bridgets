@@ -1,4 +1,3 @@
-import { ZodSchema } from 'zod';
 import { KeysWithValNotNever, MidsReturnsIntersection } from '../Utilities';
 import { Method } from '../Routes';
 import { FilesConfig, InferBridgeParser, BridgeParser } from '../Validators';
@@ -35,6 +34,7 @@ export interface ControllerI {
       } & {
         // BODY & QUERY & HEADERS & FORMDATA (files)
         // It's hard coded (did not use ExcludeNeverKeys<T> type) to show via vscode a clean output type
+        // Design above all...
         [key in KeysWithValNotNever<{
           body: InferBridgeParser<Body>;
           query: InferBridgeParser<Query>;

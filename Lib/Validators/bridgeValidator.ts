@@ -25,17 +25,11 @@ export class BValidator<Output = any> extends AbstractValidator {
     super();
   }
 
-  private isYupParser = (parser: any): parser is YupParser => {
-    return typeof parser.validateSync === 'function';
-  };
+  private isYupParser = (parser: any): parser is YupParser => typeof parser.validateSync === 'function';
 
-  private isSuperstructParser = (parser: any): parser is SuperstructParser => {
-    return typeof parser.create === 'function';
-  };
+  private isSuperstructParser = (parser: any): parser is SuperstructParser => typeof parser.create === 'function';
 
-  private isZodParser = (parser: any): parser is ZodParser => {
-    return typeof parser.safeParse === 'function';
-  };
+  private isZodParser = (parser: any): parser is ZodParser => typeof parser.safeParse === 'function';
 
   public validate: ValidateFN = async (req, data) => {
     try {

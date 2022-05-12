@@ -16,32 +16,31 @@
 
 ## What is BridgeTs?
 
-BridgeTs is a new Node.js framework built on Express.js that uses the power of Typescript to generate the code for the client. 
+BridgeTs is a new Node.js framework built on Express.js that uses the power of Typescript to generate the code for the client.
 
 In other words, its goal is that the backend developers won't have to manually write API documentation or to maintain a Postman collection to keep the client up-to-date with the API.
 
 ## Getting Started
 
-A more detailed tutorial can be found on the <a href="https://bridgets.co"> https://bridgets.co </a> website. 
+A more detailed tutorial can be found on the <a href="https://bridgets.co"> https://bridgets.co </a> website.
 
-We recommend creating a new **BridgeTS** app using *create-bridgeTS-app*, which sets up everything automatically for you. 
+We recommend creating a new **BridgeTS** app using _create-bridgeTS-app_, which sets up everything automatically for you.
 
 To create a project, run:
 
 ```
-npx create-bridge-app
+npx create-bridgets-app
 # or
-yarn create next-app
+yarn create-bridgets-app
 ```
 
 After the installation is complete:
-- Run *npm run dev* or *yarn dev* or to start the development server on http://localhost:8080
-- Run *npm run build* or *yarn build* to build the static files for production
-- Run *npm run start* or *yarn start* to start the production server on http://localhost:3000
 
+- Run _npm run dev_ or _yarn dev_ or to start the development server on http://localhost:8080
+- Run _npm run build_ or _yarn build_ to build the static files for production
+- Run _npm run start_ or _yarn start_ to start the production server on http://localhost:3000
 
 To integrate into an existing Express.js app <a href=""> View the full documentation </a>.
-
 
 ## Documentation
 
