@@ -14,7 +14,7 @@
   </a>
 </p>
 
-## What is BridgeTs?
+## What is BridgeTS?
 
 BridgeTs is a new Node.js framework built on Express.js that uses the power of Typescript to generate the code for the client.
 
