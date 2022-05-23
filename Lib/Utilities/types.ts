@@ -16,26 +16,17 @@ type Unfoo<T> = T extends { foo: any } ? T['foo'] : never;
 
 type RemoveError<T> = T extends { error: any } ? never : T;
 
-type NFooWithoutError<T extends Readonly<Handler<any, any>[]>> = {
+type NFooWithoutError<T extends Readonly<Handler[]>> = {
   [K in keyof T]: T[K] extends Handler<(arg: any) => infer Output, any> ? { foo: RemoveError<Output> } : never;
 };
 
-type NFooWithoutErrorParams<T extends Readonly<Handler<any, any>[]>> = {
+type NFooWithoutErrorParams<T extends Readonly<Handler[]>> = {
   [K in keyof T]: T[K] extends Handler<(arg: infer Input) => any, any> ? { foo: RemoveError<Input> } : never;
 };
 
 export type MidsReturnsIntersection<T extends Readonly<any[]>> = Unfoo<UnionToIntersection<Values<NFooWithoutError<T>>>>;
 
 export type MidsParams<T extends Readonly<any[]>> = Unfoo<UnionToIntersection<Values<NFooWithoutErrorParams<T>>>>;
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Mids Returns UNION (FOR SDK)
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type MidsErrorReturnsUnion<T extends ReadonlyArray<(...args: any) => any>> = Extract<
-  ReturnType<T[number]>,
-  { error: any }
->;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // APPLY --> Take an array and make it as const

@@ -9,7 +9,7 @@ import {
   BridgeParser,
 } from '../Validators';
 
-export class Handler<Resolve extends (...args: any[]) => any, Middlewares extends Readonly<Handler<any, any>[]>> {
+export class Handler<Resolve extends (...args: any[]) => any = any, Middlewares extends Readonly<Handler[]> = any> {
   public isBridgeHandler = true;
 
   public resolve: Resolve;

@@ -15,6 +15,7 @@ const mid2 = handler({
 const auth = handler({
   headers: z.object({ token: z.string().min(10) }),
   body: z.object({ shaady: z.string() }),
+  middlewares: apply(mid1),
   resolve: (p) => {
     if (p.headers.token !== 'jhsjdhsjdhjsdh') return httpError('Unauthorized', 'Wrong token');
     return { yo: 'kk' };
@@ -28,9 +29,9 @@ export class User extends Controller {
     body: z.object({ dzds: z.string() }),
     middlewares: apply(auth, mid2),
     resolve: (p) => {
-      if (p.body) console.log('AH');
+      if (p.body) return 'STT' as const;
 
-      return ',,';
+      return ',,' as const;
     },
   });
 }

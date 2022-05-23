@@ -1,5 +1,5 @@
 import { AbstractValidator, ValidateFN } from './validator';
-import { createHttpError } from '../Errors';
+import { httpError } from '../Errors';
 
 export type FilesConfig = ReadonlyArray<string> | 'any';
 
@@ -15,7 +15,7 @@ export class FilesValidator extends AbstractValidator {
     if (this.config !== 'any') for (const name of this.config) if (!req.body[name]) missingFiles.push(name);
 
     if (missingFiles.length > 0)
-      return createHttpError('Unprocessable entity', "You didn't send all required files", { missingFiles });
+      return httpError('Unprocessable entity', "You didn't send all required files", { missingFiles });
     return super.validate(req, data);
   };
 }

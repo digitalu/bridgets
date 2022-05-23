@@ -1,5 +1,5 @@
 import { ControllerI } from '../Controller';
-import { isController, isEndpoint, getParamsObjectString, pathArrayToPath } from '../Utilities';
+import { isController, isHandler, getParamsObjectString, pathArrayToPath } from '../Utilities';
 import { createFolder, writeFile } from './fs';
 
 export const writeController = (
@@ -65,19 +65,19 @@ export const writeController = (
   // CLASS METHODS
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  Object.entries(controller).forEach(([name, endpoint]) => {
-    if (!isEndpoint(endpoint)) return;
-    if (endpoint.description) file += `\n  /** ${endpoint.description}*/`;
+  Object.entries(controller).forEach(([name, handler]) => {
+    if (!isHandler(handler)) return;
+    if (handler.description) file += `\n  /** ${handler.description}*/`;
 
     const paramsString = [];
-    if (endpoint.bodySchema) paramsString.push(`body: ${typeVar}['${name}']['body']`);
-    if (endpoint.querySchema) paramsString.push(`query: ${typeVar}['${name}']['query']`);
-    if (endpoint.headersSchema) paramsString.push(`headers: ${typeVar}['${name}']['headers']`);
-    if (endpoint.filesConfig) {
-      if (endpoint.filesConfig === 'any') paramsString.push('files: Record<string, File>');
+    if (handler.bodySchema) paramsString.push(`body: ${typeVar}['${name}']['body']`);
+    if (handler.querySchema) paramsString.push(`query: ${typeVar}['${name}']['query']`);
+    if (handler.headersSchema) paramsString.push(`headers: ${typeVar}['${name}']['headers']`);
+    if (handler.filesConfig) {
+      if (handler.filesConfig === 'any') paramsString.push('files: Record<string, File>');
       else
         paramsString.push(
-          `files: {${endpoint.filesConfig
+          `files: {${handler.filesConfig
             .map((f) => ` ${f}: File;`)
             .reduce((a, b) => a + b)
             .slice(0, -1)} }`,
@@ -90,7 +90,7 @@ export const writeController = (
       hasParams ? `p: ${getParamsObjectString(paramsString)}` : ''
     }): Promise<${typeVar}['${name}']['return']> => {\n    return this.Fetch({ path: '${[...pathArray, name]
       .map((p) => `/${p}`)
-      .reduce((a, b) => a + b)}', method: '${endpoint.method}'${hasParams ? ', ...p ' : ''}});\n  };\n`;
+      .reduce((a, b) => a + b)}', method: '${handler.method}'${hasParams ? ', ...p ' : ''}});\n  };\n`;
   });
 
   file += `}\n`;

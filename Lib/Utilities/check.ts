@@ -5,6 +5,6 @@ export const isController = (data: any): data is ControllerI => {
   return data.createEndpoint !== undefined && data.isBridgeController;
 };
 
-export const isHandler = (data: any): data is Handler<any, any> => {
+export const isHandler = (data: any): data is Handler => {
   return data.resolve !== undefined && typeof data.resolve === 'function' && data.isBridgeHandler;
 };
