@@ -40,7 +40,7 @@ export const createExpressMiddleware = (routes: BridgeRoutes, onError?: ErrorHan
 
       // Return '' to transform void return into empty string
       const result =
-        (await route.handler({ headers: req.headers, body: req.body, files: req.body, query: req.query, ...validation })) ||
+        (await route.resolve({ headers: req.headers, body: req.body, files: req.body, query: req.query, ...validation })) ||
         '';
 
       if (result.error) {

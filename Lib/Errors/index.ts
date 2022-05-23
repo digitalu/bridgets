@@ -1,6 +1,6 @@
 import { errorStatus, ErrorStatus } from './status';
 
-export const createHttpError = <Type extends keyof ErrorStatus, Name extends string, Data>(
+export const httpError = <Type extends keyof ErrorStatus, Name extends string, Data>(
   type: Type,
   name: Name,
   data?: Data

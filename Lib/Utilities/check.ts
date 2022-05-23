@@ -1,10 +1,10 @@
-import { Endpoint } from '../Endpoint';
+import { Handler } from '../Handler';
 import { ControllerI } from '../Controller';
 
 export const isController = (data: any): data is ControllerI => {
   return data.createEndpoint !== undefined && data.isBridgeController;
 };
 
-export const isEndpoint = (data: any): data is Endpoint<any, any> => {
-  return data.handler !== undefined && data.isBridgeEndpoint;
+export const isHandler = (data: any): data is Handler<any, any> => {
+  return data.resolve !== undefined && typeof data.resolve === 'function' && data.isBridgeHandler;
 };

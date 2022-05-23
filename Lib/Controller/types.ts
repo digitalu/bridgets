@@ -1,79 +1,45 @@
-import { KeysWithValNotNever, MidsReturnsIntersection } from '../Utilities';
+import { MidsReturnsIntersection, MidsParams } from '../Utilities';
 import { Method } from '../Routes';
 import { FilesConfig, InferBridgeParser, BridgeParser } from '../Validators';
-import { Endpoint } from '../Endpoint';
+import { Handler } from '../Handler';
 import formidable from 'formidable';
-import { Request } from 'express';
 
-export type Middleware = (p: Request) => Record<any, any> | void;
-
-type FilesDoNotExists = ['BridgeFilesDoNotExists'];
-
-export interface RouteParams<Body, Query, Mids, Handler, Method, Headers, Files> {
-  body?: Method extends 'GET'
-    ? never
-    : Files extends FilesDoNotExists
-    ? Body
-    : never /** Can't have a body with GET method or with files */;
+export interface RouteParams<Body, Query, Mids, Resolve, Method, Headers, Files> {
+  body?: Body /** Can't have a body with GET method or with files, an error is throw if ther developer tries to, but the type here doesnt block to keep a clean UI */;
   query?: Query;
   headers?: Headers;
   files?: Files;
   method?: Method;
   middlewares?: Mids;
   description?: string;
-  handler: Handler;
+  resolve: Resolve;
 }
 
 export interface ControllerI {
-  createEndpoint: <
-    Handler extends (
-      p: {
-        // MIDDLEWARES
-        [key in KeysWithValNotNever<{ mid: MidsReturnsIntersection<Mids> }> &
-          keyof { mid: MidsReturnsIntersection<Mids> }]: { mid: MidsReturnsIntersection<Mids> }[key];
-      } & {
-        // BODY & QUERY & HEADERS & FORMDATA (files)
-        // It's hard coded (did not use ExcludeNeverKeys<T> type) to show via vscode a clean output type
-        // Design above all...
-        [key in KeysWithValNotNever<{
-          body: InferBridgeParser<Body>;
-          query: InferBridgeParser<Query>;
-          headers: InferBridgeParser<Headers>;
-          files: Files extends FilesDoNotExists
-            ? never
-            : Files extends 'any'
-            ? { [key: string]: formidable.File }
-            : { [key in Files[number]]: formidable.File };
-        }> &
-          keyof {
-            body: InferBridgeParser<Body>;
-            query: InferBridgeParser<Query>;
-            headers: InferBridgeParser<Headers>;
-            files: Files extends FilesDoNotExists
-              ? never
-              : Files extends 'any'
-              ? { [key: string]: formidable.File }
-              : { [key in Files[number]]: formidable.File };
-          }]: {
-          body: InferBridgeParser<Body>;
-          query: InferBridgeParser<Query>;
-          headers: InferBridgeParser<Headers>;
-          files: Files extends FilesDoNotExists
-            ? never
-            : Files extends 'any'
-            ? { [key: string]: formidable.File }
-            : { [key in Files[number]]: formidable.File };
-        }[key];
-      }
-    ) => Res,
+  handler: <
+    Resolve extends (p: {
+      mid: (MidsReturnsIntersection<Mids> extends never ? {} : MidsReturnsIntersection<Mids>) &
+        (MidsParams<Mids>['mid'] extends never ? {} : MidsParams<Mids>['mid']);
+      body: (InferBridgeParser<Body> extends never ? {} : InferBridgeParser<Body>) &
+        (MidsParams<Mids>['body'] extends never ? {} : MidsParams<Mids>['body']);
+      query: (InferBridgeParser<Query> extends never ? {} : InferBridgeParser<Query>) &
+        (MidsParams<Mids>['query'] extends never ? {} : MidsParams<Mids>['query']);
+      headers: (InferBridgeParser<Headers> extends never ? {} : InferBridgeParser<Headers>) &
+        (MidsParams<Mids>['headers'] extends never ? {} : MidsParams<Mids>['headers']);
+      files: Files extends ['BridgeFilesDoNotExists']
+        ? {}
+        : Files extends 'any'
+        ? { [key: string]: formidable.File }
+        : { [key in Files[number]]: formidable.File };
+    }) => Res,
     Res,
     Body extends BridgeParser<Record<any, any>> = never,
     Query extends BridgeParser<Record<string, any>> = never,
     Headers extends BridgeParser<Record<string, any>> = never,
-    Files extends FilesConfig = FilesDoNotExists,
-    Mids extends ReadonlyArray<Middleware> = never,
+    Files extends FilesConfig = ['BridgeFilesDoNotExists'],
+    Mids extends ReadonlyArray<Handler<any, any>> = never,
     Meth extends Method = 'POST'
   >(
-    p: RouteParams<Body, Query, Mids, Handler, Meth, Headers, Files>
-  ) => Endpoint<Handler, Mids>;
+    p: RouteParams<Body, Query, Mids, Resolve, Meth, Headers, Files>
+  ) => Handler<Resolve, Mids>;
 }

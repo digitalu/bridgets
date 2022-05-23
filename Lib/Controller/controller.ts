@@ -1,9 +1,9 @@
 import { ControllerI } from '../Controller';
-import { Endpoint } from '../Endpoint';
-import { createHttpError } from '../Errors';
+import { Handler } from '../Handler';
+import { httpError } from '../Errors';
 
-export const createEndpoint: ControllerI['createEndpoint'] = (routeParams) => {
-  return new Endpoint({
+export const handler: ControllerI['handler'] = (routeParams) => {
+  return new Handler({
     bodySchema: routeParams.body,
     querySchema: routeParams.query,
     headersSchema: routeParams.headers,
@@ -11,15 +11,15 @@ export const createEndpoint: ControllerI['createEndpoint'] = (routeParams) => {
     method: routeParams.method || 'POST',
     middlewares: routeParams.middlewares,
     description: routeParams.description,
-    handler: routeParams.handler,
+    resolve: routeParams.resolve,
   });
 };
 
 export class Controller implements ControllerI {
   public isBridgeController = true;
 
-  public createEndpoint: ControllerI['createEndpoint'] = (routeParams) => {
-    return new Endpoint({
+  public handler: ControllerI['handler'] = (routeParams) => {
+    return new Handler({
       bodySchema: routeParams.body,
       querySchema: routeParams.query,
       headersSchema: routeParams.headers,
@@ -27,8 +27,8 @@ export class Controller implements ControllerI {
       method: routeParams.method || 'POST',
       middlewares: routeParams.middlewares,
       description: routeParams.description,
-      handler: routeParams.handler,
+      resolve: routeParams.resolve,
     });
   };
-  public createHttpError = createHttpError;
+  public httpError = httpError;
 }

@@ -1,24 +1,16 @@
 // This code was strongly inspired from @trpc/server
-import { createHttpError } from '../Errors';
+import { httpError } from '../Errors';
 import { AbstractValidator, ValidateFN } from './validator';
 
-type YupParser<T = any> = {
-  validateSync: (input: unknown) => T;
-};
-
-type SuperstructParser<T = any> = {
-  create: (input: unknown) => T;
-};
-
-type ZodParser<T = any> = {
-  parse: (input: any) => T;
-};
+type YupParser<T = any> = { validateSync: (input: unknown) => T };
+type SuperstructParser<T = any> = { create: (input: unknown) => T };
+type ZodParser<T = any> = { parse: (input: any) => T };
 
 export type BridgeParser<T = any> = YupParser<T> | ZodParser<T> | SuperstructParser<T>;
 
 export type InferBridgeParser<Val extends BridgeParser> = Val extends BridgeParser<infer Output> ? Output : any;
 
-export class BValidator<Output = any> extends AbstractValidator {
+export class BridgeValidator<Output = any> extends AbstractValidator {
   public output!: Output;
 
   constructor(private parser: BridgeParser<Output>, private dataToValidate: 'body' | 'query' | 'headers') {
@@ -41,11 +33,11 @@ export class BValidator<Output = any> extends AbstractValidator {
     } catch (error) {
       switch (this.dataToValidate) {
         case 'body':
-          return createHttpError('Unprocessable entity', `The JSON body does not respect its schema`, error);
+          return httpError('Unprocessable entity', `Body schema validation error`, error);
         case 'query':
-          return createHttpError('Unprocessable entity', `The query parameters does not respect its schema`, error);
+          return httpError('Unprocessable entity', `Query schema validation error`, error);
         case 'headers':
-          return createHttpError('Unprocessable entity', `The headers does not respect its schema`, error);
+          return httpError('Unprocessable entity', `Headers schema validation error`, error);
       }
     }
   };

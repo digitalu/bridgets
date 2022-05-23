@@ -24,4 +24,11 @@ app.listen(8077, () => {
 
 export type SDKTypes = RoutesToSDK<typeof routes>;
 
-let t: SDKTypes['user']['update']['return'];
+// let t: SDKTypes['user']['create']['return'] = {} as any;
+
+// if (typeof t === 'object' && 'error' in t) {
+//   switch (t.error.name) {
+//     case 'AH':
+//     // t.error.
+//   }
+// }
