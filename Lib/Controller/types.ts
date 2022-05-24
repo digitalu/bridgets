@@ -1,7 +1,6 @@
 import { MidsReturnsIntersection, MidsParams } from '../Utilities';
 import { Method } from '../Routes';
-import { FilesConfig, InferBridgeParser, BridgeParser } from '../Validators';
-import { Handler } from '../Handler';
+import { BridgeHandler, DataParser, InferDataParser, FilesConfig } from '../Handler';
 import formidable from 'formidable';
 
 export interface RouteParams<Body, Query, Mids, Resolve, Method, Headers, Files> {
@@ -23,13 +22,12 @@ export interface ControllerI {
   handler: <
     Resolve extends (p: {
       [key in KeysWithValNotEmptyObject<{
-        mid: (MidsReturnsIntersection<Mids> extends never ? {} : MidsReturnsIntersection<Mids>) &
-          (MidsParams<Mids>['mid'] extends never ? {} : MidsParams<Mids>['mid']);
-        body: (InferBridgeParser<Body> extends never ? {} : InferBridgeParser<Body>) &
+        mid: MidsReturnsIntersection<Mids> extends never ? {} : MidsReturnsIntersection<Mids>;
+        body: (InferDataParser<Body> extends never ? {} : InferDataParser<Body>) &
           (MidsParams<Mids>['body'] extends never ? {} : MidsParams<Mids>['body']);
-        query: (InferBridgeParser<Query> extends never ? {} : InferBridgeParser<Query>) &
+        query: (InferDataParser<Query> extends never ? {} : InferDataParser<Query>) &
           (MidsParams<Mids>['query'] extends never ? {} : MidsParams<Mids>['query']);
-        headers: (InferBridgeParser<Headers> extends never ? {} : InferBridgeParser<Headers>) &
+        headers: (InferDataParser<Headers> extends never ? {} : InferDataParser<Headers>) &
           (MidsParams<Mids>['headers'] extends never ? {} : MidsParams<Mids>['headers']);
         files: Files extends ['BridgeFilesDoNotExists']
           ? {}
@@ -38,13 +36,12 @@ export interface ControllerI {
           : { [key in Files[number]]: formidable.File };
       }> &
         keyof {
-          mid: (MidsReturnsIntersection<Mids> extends never ? {} : MidsReturnsIntersection<Mids>) &
-            (MidsParams<Mids>['mid'] extends never ? {} : MidsParams<Mids>['mid']);
-          body: (InferBridgeParser<Body> extends never ? {} : InferBridgeParser<Body>) &
+          mid: MidsReturnsIntersection<Mids> extends never ? {} : MidsReturnsIntersection<Mids>;
+          body: (InferDataParser<Body> extends never ? {} : InferDataParser<Body>) &
             (MidsParams<Mids>['body'] extends never ? {} : MidsParams<Mids>['body']);
-          query: (InferBridgeParser<Query> extends never ? {} : InferBridgeParser<Query>) &
+          query: (InferDataParser<Query> extends never ? {} : InferDataParser<Query>) &
             (MidsParams<Mids>['query'] extends never ? {} : MidsParams<Mids>['query']);
-          headers: (InferBridgeParser<Headers> extends never ? {} : InferBridgeParser<Headers>) &
+          headers: (InferDataParser<Headers> extends never ? {} : InferDataParser<Headers>) &
             (MidsParams<Mids>['headers'] extends never ? {} : MidsParams<Mids>['headers']);
           files: Files extends ['BridgeFilesDoNotExists']
             ? {}
@@ -52,13 +49,12 @@ export interface ControllerI {
             ? { [key: string]: formidable.File }
             : { [key in Files[number]]: formidable.File };
         }]: {
-        mid: (MidsReturnsIntersection<Mids> extends never ? {} : MidsReturnsIntersection<Mids>) &
-          (MidsParams<Mids>['mid'] extends never ? {} : MidsParams<Mids>['mid']);
-        body: (InferBridgeParser<Body> extends never ? {} : InferBridgeParser<Body>) &
+        mid: MidsReturnsIntersection<Mids> extends never ? {} : MidsReturnsIntersection<Mids>;
+        body: (InferDataParser<Body> extends never ? {} : InferDataParser<Body>) &
           (MidsParams<Mids>['body'] extends never ? {} : MidsParams<Mids>['body']);
-        query: (InferBridgeParser<Query> extends never ? {} : InferBridgeParser<Query>) &
+        query: (InferDataParser<Query> extends never ? {} : InferDataParser<Query>) &
           (MidsParams<Mids>['query'] extends never ? {} : MidsParams<Mids>['query']);
-        headers: (InferBridgeParser<Headers> extends never ? {} : InferBridgeParser<Headers>) &
+        headers: (InferDataParser<Headers> extends never ? {} : InferDataParser<Headers>) &
           (MidsParams<Mids>['headers'] extends never ? {} : MidsParams<Mids>['headers']);
         files: Files extends ['BridgeFilesDoNotExists']
           ? {}
@@ -68,13 +64,13 @@ export interface ControllerI {
       }[key];
     }) => Res,
     Res,
-    Body extends BridgeParser<Record<any, any>> = never,
-    Query extends BridgeParser<Record<string, any>> = never,
-    Headers extends BridgeParser<Record<string, any>> = never,
+    Body extends DataParser<Record<any, any>> = never,
+    Query extends DataParser<Record<string, any>> = never,
+    Headers extends DataParser<Record<string, any>> = never,
     Files extends FilesConfig = ['BridgeFilesDoNotExists'],
-    Mids extends ReadonlyArray<Handler> = never,
+    Mids extends ReadonlyArray<BridgeHandler> = never,
     Meth extends Method = 'POST'
   >(
     p: RouteParams<Body, Query, Mids, Resolve, Meth, Headers, Files>
-  ) => Handler<Resolve, Mids>;
+  ) => BridgeHandler<Resolve, Mids>;
 }

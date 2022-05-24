@@ -1,7 +1,7 @@
 import formidable from 'formidable';
-import { Request } from 'express';
+import { IncomingMessage } from 'http';
 
-export const formidableAsyncParseFiles = async (req: Request): Promise<formidable.Files> => {
+export const formidableAsyncParseFiles = async (req: IncomingMessage): Promise<formidable.Files> => {
   let form = formidable({ multiples: true });
 
   return new Promise((resolve, reject) => {

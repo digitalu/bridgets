@@ -1,13 +1,11 @@
 import { ControllerI } from '../Controller/';
-import { Handler } from '../Handler';
-import { Validator, FilesConfig } from '../Validators';
+import { BridgeHandler, Handler, FilesConfig } from '../Handler';
 
 export type BridgeRoutes = { [key: string | number | symbol]: BridgeRoutes | ControllerI };
 
 export interface ServerRoutes {
   [key: string]: {
-    resolve: (p: any) => any;
-    validator?: Validator;
+    endpoint: Handler;
     filesConfig?: FilesConfig;
   };
 }
@@ -15,14 +13,14 @@ export interface ServerRoutes {
 export type Method = 'POST' | 'PATCH' | 'GET' | 'DELETE' | 'PUT';
 
 // We don't need to inject the files types because the compiler can understand by itself its typez
-type HandlerReturnType<H extends Handler> = H extends Handler<infer ResolveFct, infer Middlewares>
+type BridgeHandlerReturnType<H extends BridgeHandler> = H extends BridgeHandler<infer ResolveFct, infer Middlewares>
   ? {
       body: Parameters<ResolveFct>[0]['body'];
       query: Parameters<ResolveFct>[0]['query'];
       headers: Parameters<ResolveFct>[0]['headers'];
       return:
         | ReturnType<ResolveFct>
-        | Extract<HandlerReturnType<Middlewares[number]>['return'], { error: any }>
+        | Extract<BridgeHandlerReturnType<Middlewares[number]>['return'], { error: any }>
         | (Parameters<ResolveFct>[0]['body'] extends Record<any, any>
             ? { error: { name: 'Body schema validation error'; status: 422; data: any } }
             : never)
@@ -36,8 +34,8 @@ type HandlerReturnType<H extends Handler> = H extends Handler<infer ResolveFct, 
   : {};
 
 type ControllerSDK<T extends ControllerI> = {
-  [key in keyof T]: T[key] extends Handler<any, any>
-    ? HandlerReturnType<T[key]>
+  [key in keyof T]: T[key] extends BridgeHandler<any, any>
+    ? BridgeHandlerReturnType<T[key]>
     : T[key] extends ControllerI
     ? ControllerSDK<T[key]>
     : never;

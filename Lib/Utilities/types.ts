@@ -1,4 +1,4 @@
-import { Handler } from '../Handler';
+import { BridgeHandler } from '../Handler';
 
 export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
 
@@ -16,12 +16,12 @@ type Unfoo<T> = T extends { foo: any } ? T['foo'] : never;
 
 type RemoveError<T> = T extends { error: any } ? never : T;
 
-type NFooWithoutError<T extends Readonly<Handler[]>> = {
-  [K in keyof T]: T[K] extends Handler<(arg: any) => infer Output, any> ? { foo: RemoveError<Output> } : never;
+type NFooWithoutError<T extends Readonly<BridgeHandler[]>> = {
+  [K in keyof T]: T[K] extends BridgeHandler<(arg: any) => infer Output, any> ? { foo: RemoveError<Output> } : never;
 };
 
-type NFooWithoutErrorParams<T extends Readonly<Handler[]>> = {
-  [K in keyof T]: T[K] extends Handler<(arg: infer Input) => any, any> ? { foo: RemoveError<Input> } : never;
+type NFooWithoutErrorParams<T extends Readonly<BridgeHandler[]>> = {
+  [K in keyof T]: T[K] extends BridgeHandler<(arg: infer Input) => any, any> ? { foo: RemoveError<Input> } : never;
 };
 
 export type MidsReturnsIntersection<T extends Readonly<any[]>> = Unfoo<UnionToIntersection<Values<NFooWithoutError<T>>>>;

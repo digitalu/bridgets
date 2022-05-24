@@ -1,8 +1,8 @@
 import AdmZip from 'adm-zip';
-import { Request, Response } from 'express';
+import { IncomingMessage, ServerResponse } from 'http';
 import fs from 'fs';
 
-export const fetchSdkRoute = (req: Request, res: Response) => {
+export const fetchSdkRoute = (req: IncomingMessage, res: ServerResponse) => {
   if (!fs.existsSync('bridgets.config.json')) throw new Error('No Config');
 
   const cfg = JSON.parse(fs.readFileSync('bridgets.config.json', 'utf-8'));
@@ -13,6 +13,7 @@ export const fetchSdkRoute = (req: Request, res: Response) => {
   const fileName = 'sdk.zip';
   const fileType = 'application/zip';
 
-  res.writeHead(200, { 'Content-Disposition': `attachment; filename="${fileName}"`, 'Content-Type': fileType });
-  return res.end(zipFileContents);
+  return res
+    .writeHead(200, { 'Content-Disposition': `attachment; filename="${fileName}"`, 'Content-Type': fileType })
+    .end(zipFileContents);
 };

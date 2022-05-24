@@ -1,5 +1,5 @@
 import { ControllerI } from '../Controller';
-import { isController, isHandler, getParamsObjectString, pathArrayToPath } from '../Utilities';
+import { isController, isBridgeHandler, getParamsObjectString, pathArrayToPath } from '../Utilities';
 import { createFolder, writeFile } from './fs';
 
 export const writeController = (
@@ -66,7 +66,7 @@ export const writeController = (
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   Object.entries(controller).forEach(([name, handler]) => {
-    if (!isHandler(handler)) return;
+    if (!isBridgeHandler(handler)) return;
     if (handler.description) file += `\n  /** ${handler.description}*/`;
 
     const paramsString = [];

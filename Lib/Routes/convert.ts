@@ -1,6 +1,6 @@
 import { ControllerI } from '../Controller';
 import { BridgeRoutes, ServerRoutes } from '../Routes';
-import { isController, isHandler } from '../Utilities';
+import { isController, isBridgeHandler } from '../Utilities';
 
 export const createRoutes = (routes: BridgeRoutes, serverRoutes: ServerRoutes = {}, prefix = ''): ServerRoutes => {
   Object.entries(routes).forEach(([name, subRoutesOrController]) => {
@@ -13,10 +13,9 @@ export const createRoutes = (routes: BridgeRoutes, serverRoutes: ServerRoutes = 
 
 const createRoutesFromController = (controller: ControllerI, serverRoutes: ServerRoutes, prefix: string): void => {
   Object.entries(controller).forEach(([name, endpoint]) => {
-    if (isHandler(endpoint))
+    if (isBridgeHandler(endpoint))
       serverRoutes[`${prefix}/${name}`] = {
-        resolve: endpoint.resolve,
-        validator: endpoint.validator,
+        endpoint: endpoint,
         filesConfig: endpoint.filesConfig,
       };
     else if (isController(endpoint)) createRoutesFromController(endpoint, serverRoutes, `${prefix}/${name}`);

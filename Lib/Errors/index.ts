@@ -9,3 +9,4 @@ export const httpError = <Type extends keyof ErrorStatus, Name extends string, D
 };
 
 export * from './listener';
+export * from './types';

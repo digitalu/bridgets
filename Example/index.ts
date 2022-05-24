@@ -9,9 +9,9 @@ app.use('', (req, res, next) => {
   next();
 });
 
-const errorHandler = onError(({ error, req, path, mdlwData }) => {
+const errorHandler = onError(({ error, path }) => {
   if (error.name === 'Internal server error') console.log(error); // Send to bug reporting
-  else console.log('Other error', error, path, mdlwData);
+  else console.log('Other error', error, path);
 });
 
 app.use('', createExpressMiddleware(routes, errorHandler));
@@ -26,15 +26,16 @@ export type SDKTypes = RoutesToSDK<typeof routes>;
 
 let t: SDKTypes['user']['create']['return'] = {} as any;
 
-if (typeof t === 'object' && 'error' in t) {
-  switch (t.error.name) {
-    case 'Body schema validation error':
-      break;
-    // case ''
-  }
-} else {
-  t;
-}
+// if (typeof t === 'object' && 'error' in t) {
+//   switch (t.error.name) {
+//     case 'Body schema validation error':
+//       break;
+
+//     // case ''
+//   }
+// } else {
+//   t;
+// }
 
 // if (typeof t === 'object' && 'error' in t) {
 //   switch (t.error.name) {

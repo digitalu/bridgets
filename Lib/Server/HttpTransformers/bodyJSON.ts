@@ -1,6 +1,6 @@
-import { Request } from 'express';
+import { IncomingMessage } from 'http';
 
-export const getJSONDataFromRequestStream = <T>(request: Request): Promise<T> =>
+export const getJSONDataFromRequestStream = <T>(request: IncomingMessage): Promise<T> =>
   new Promise((resolve) => {
     const chunks: any[] = [];
     request.on('data', (chunk) => {
