@@ -71,7 +71,7 @@ export class BridgeHandler<
   public handle: Handler['handle'] = async (data) => {
     const res = await this.handler.handle(data);
 
-    if (res.error) return res;
+    if (res && res.error) return res;
 
     data.mid = { ...res, ...data.mid };
 
