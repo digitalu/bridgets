@@ -40,7 +40,7 @@ export class MiddelwaresHandler extends AbstractHandler {
   public handle: Handler['handle'] = async (data) => {
     const results = await Promise.all(this.handlers.map(async (handler) => handler.handle(data)));
 
-    for (const res of results) if (res.error) return res;
+    for (const res of results) if (res && res.error) return res;
 
     return super.handle({ ...data, mid: Object.assign({}, ...results) });
   };
