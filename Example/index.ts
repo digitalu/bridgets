@@ -11,7 +11,7 @@ app.use('', (req, res, next) => {
 
 const errorHandler = onError(({ error, path }) => {
   if (error.name === 'Internal server error') console.log(error); // Send to bug reporting
-  else console.log('Other error', error, path);
+  // else console.log('Other error', error, path);
 });
 
 app.use('', createExpressMiddleware(routes, errorHandler));

@@ -52,6 +52,11 @@ export class BridgeHandler<
 
     if (p.middlewares) handler = handler.setNext(new MiddelwaresHandler(p.middlewares));
 
+    // if (p.middlewares)
+    //   p.middlewares.forEach((mid) => {
+    //     handler = handler.setNext(mid);
+    //   });
+
     handler = handler.setNext(new Resolver(p.resolve));
 
     this.handler = firstHandler;
@@ -67,6 +72,8 @@ export class BridgeHandler<
     const res = await this.handler.handle(data);
 
     if (res.error) return res;
+
+    data.mid = { ...res, ...data.mid };
 
     if (this.nextHandler) return this.nextHandler.handle(data);
 

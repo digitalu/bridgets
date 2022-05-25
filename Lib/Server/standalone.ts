@@ -22,8 +22,7 @@ export const createHttpHandler = (routes: BridgeRoutes, onError?: ErrorHandler) 
 
       if (path === '/fetchBridgeSDK') return fetchSdkRoute(req, res);
 
-      const route = serverRoutes[path];
-      if (!route) return;
+      const route = serverRoutes[path] || serverRoutes['not-found'];
 
       if (route.filesConfig) file = await formidableAsyncParseFiles(req);
       else body = await getJSONDataFromRequestStream(req);
@@ -41,7 +40,9 @@ export const createHttpHandler = (routes: BridgeRoutes, onError?: ErrorHandler) 
 
       if (result.error) {
         onError?.({ error: result.error, path: path });
-        return res.writeHead(result.error.status || 500, { 'Content-Type': 'application/json' }).end(JSON.stringify(result));
+        return res
+          .writeHead(result.error.status || 500, { 'Content-Type': 'application/json' })
+          .end(JSON.stringify({ error: result.error }));
       }
 
       return res

@@ -1,8 +1,21 @@
-import { ControllerI } from '../Controller';
+import { ControllerI, handler } from '../Controller';
+import { httpError } from '../Errors';
 import { BridgeRoutes, ServerRoutes } from '../Routes';
 import { isController, isBridgeHandler } from '../Utilities';
 
-export const createRoutes = (routes: BridgeRoutes, serverRoutes: ServerRoutes = {}, prefix = ''): ServerRoutes => {
+const defaultServerRoutes: ServerRoutes = {
+  'not-found': {
+    endpoint: handler({
+      resolve: () => httpError('Not Found', 'Root not found'),
+    }),
+  },
+};
+
+export const createRoutes = (
+  routes: BridgeRoutes,
+  serverRoutes: ServerRoutes = defaultServerRoutes,
+  prefix = ''
+): ServerRoutes => {
   Object.entries(routes).forEach(([name, subRoutesOrController]) => {
     if (isController(subRoutesOrController))
       createRoutesFromController(subRoutesOrController, serverRoutes, `${prefix}/${name}`);
