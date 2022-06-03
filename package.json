@@ -12,7 +12,7 @@
     "source": "./Example/index.ts"
   },
   "scripts": {
-    "dev-test": "clear && nodemon --config nodemon.json ./Example/index.ts",
+    "dev-test": "clear && nodemon --config nodemon.json ./Example/index.ts -compileBridgeSDK",
     "compile-test": "npx ts-node ./Example/index.ts -c",
     "build": "tsc",
     "remove-dist": "if [ -d dist ]; then rm -rf dist; fi",
