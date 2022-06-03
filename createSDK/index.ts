@@ -28,11 +28,13 @@ const cfg = JSON.parse(fs.readFileSync('bridgets.config.json', 'utf-8'));
 // DELETE SDK BEFORE RECREATING IT IF EXISTS
 if (fs.existsSync(cfg.sdkLocation)) fs.rmSync(cfg.sdkLocation, { recursive: true });
 
+console.log('Compiling...');
+
 // CREATE DTS FROM PROJECT CODE IN THE SDK
 runCommand(createDtsFolderCommand(cfg.tsConfigLocation, `${cfg.sdkLocation}/dts`));
 
 // COPYING TYPES FROM NODE_MODULES AND MINFYING THEM
-copyTypesAndMinify(cfg.pathToSourceFile);
+copyTypesAndMinify(cfg.sdkLocation);
 
 // RUN THE PROJECT TO COMPILE THE BRIDGE SDK
 runCommand(`npx ts-node ${cfg.pathToSourceFile} -compileBridgeSDK`);

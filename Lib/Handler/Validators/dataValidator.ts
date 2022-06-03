@@ -10,6 +10,8 @@ export type DataParser<T = any> = YupParser<T> | ZodParser<T> | SuperstructParse
 
 export type InferDataParser<Val extends DataParser> = Val extends DataParser<infer Output> ? Output : any;
 
+export const isZodParser = (parser: any): parser is ZodParser => typeof parser?.safeParse === 'function';
+
 /**
  *
  */

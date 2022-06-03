@@ -47,4 +47,15 @@ export class User extends Controller {
       return ',,' as const;
     },
   });
+
+  update = this.handler({
+    query: z.object({ dzds: z.string() }),
+    body: z.object({ dzds: z.string() }),
+    headers: z.object({
+      Ahoui: z.object({
+        tsbbb: z.number().min(100).max(89),
+      }),
+    }),
+    resolve: () => 'ok',
+  });
 }
