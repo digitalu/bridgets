@@ -18,18 +18,20 @@ type BridgeHandlerReturnType<H extends BridgeHandler> = H extends BridgeHandler<
       body: Parameters<ResolveFct>[0]['body'];
       query: Parameters<ResolveFct>[0]['query'];
       headers: Parameters<ResolveFct>[0]['headers'];
-      return:
-        | ReturnType<ResolveFct>
-        | Extract<BridgeHandlerReturnType<Middlewares[number]>['return'], { error: any }>
-        | (Parameters<ResolveFct>[0]['body'] extends Record<any, any>
-            ? { error: { name: 'Body schema validation error'; status: 422; data: any } }
-            : never)
-        | (Parameters<ResolveFct>[0]['headers'] extends Record<any, any>
-            ? { error: { name: 'Headers schema validation error'; status: 422; data: any } }
-            : never)
-        | (Parameters<ResolveFct>[0]['query'] extends Record<any, any>
-            ? { error: { name: 'Query schema validation error'; status: 422; data: any } }
-            : never);
+      return: ReturnType<ResolveFct> extends Promise<infer RetWithoutPromise>
+        ? RetWithoutPromise
+        :
+            | ReturnType<ResolveFct>
+            | Extract<BridgeHandlerReturnType<Middlewares[number]>['return'], { error: any }>
+            | (Parameters<ResolveFct>[0]['body'] extends Record<any, any>
+                ? { error: { name: 'Body schema validation error'; status: 422; data: any } }
+                : never)
+            | (Parameters<ResolveFct>[0]['headers'] extends Record<any, any>
+                ? { error: { name: 'Headers schema validation error'; status: 422; data: any } }
+                : never)
+            | (Parameters<ResolveFct>[0]['query'] extends Record<any, any>
+                ? { error: { name: 'Query schema validation error'; status: 422; data: any } }
+                : never);
     }
   : {};
 
