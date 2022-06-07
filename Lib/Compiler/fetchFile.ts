@@ -1,8 +1,8 @@
-export const fetchFile = `const urlServer = '';
-
-import axios, { AxiosRequestConfig } from 'axios';
+export const fetchFile = `import axios, { AxiosRequestConfig } from 'axios';
 import FormData from 'form-data';
 import url from 'url';
+
+const urlServer = '';
 
 interface FETCH {
   method: 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
