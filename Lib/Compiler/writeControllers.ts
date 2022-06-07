@@ -83,20 +83,24 @@ export const writeController = (
       zodObjects[name] = {};
     else return;
 
-    if (isZodParser(handler.bodySchema))
-      zodObjects[name].body = jsonSchemaToZod(zodToJsonSchema(handler.bodySchema as any) as any, 'zodObject', false)
-        .replace('const zodObject = ', '')
-        .slice(0, -2);
+    try {
+      if (isZodParser(handler.bodySchema))
+        zodObjects[name].body = jsonSchemaToZod(zodToJsonSchema(handler.bodySchema as any) as any, 'zodObject', false)
+          .replace('const zodObject = ', '')
+          .slice(0, -2);
 
-    if (isZodParser(handler.querySchema))
-      zodObjects[name].query = jsonSchemaToZod(zodToJsonSchema(handler.querySchema as any) as any, 'zodObject', false)
-        .replace('const zodObject = ', '')
-        .slice(0, -2);
+      if (isZodParser(handler.querySchema))
+        zodObjects[name].query = jsonSchemaToZod(zodToJsonSchema(handler.querySchema as any) as any, 'zodObject', false)
+          .replace('const zodObject = ', '')
+          .slice(0, -2);
 
-    if (isZodParser(handler.headersSchema))
-      zodObjects[name].query = jsonSchemaToZod(zodToJsonSchema(handler.headersSchema as any) as any, 'zodObject', false)
-        .replace('const zodObject = ', '')
-        .slice(0, -2);
+      if (isZodParser(handler.headersSchema))
+        zodObjects[name].query = jsonSchemaToZod(zodToJsonSchema(handler.headersSchema as any) as any, 'zodObject', false)
+          .replace('const zodObject = ', '')
+          .slice(0, -2);
+    } catch (err) {
+      console.log('Error in zod compilation');
+    }
   });
 
   if (Object.keys(zodObjects).length > 0) {
