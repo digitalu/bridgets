@@ -126,12 +126,6 @@ export const writeController = (
   Object.entries(controller).forEach(([name, handler]) => {
     if (!isBridgeHandler(handler)) return;
 
-    console.log(
-      zodToJsonSchema(handler.querySchema as any),
-      'WHAAAT',
-      jsonSchemaToZod(zodToJsonSchema(handler.querySchema as any) as any, 'ahouioui', false).replace('const ahouioui = ', '')
-    );
-
     if (handler.description) file += `\n  /** ${handler.description}*/`;
 
     const paramsString = [];
