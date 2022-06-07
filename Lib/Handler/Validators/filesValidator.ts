@@ -12,7 +12,7 @@ export class FilesValidator extends AbstractHandler {
     const missingFiles: string[] = [];
 
     // req.body contains the files
-    if (this.config !== 'any') for (const name of this.config) if (!data.body[name]) missingFiles.push(name);
+    if (this.config !== 'any') for (const name of this.config) if (!data.file[name]) missingFiles.push(name);
 
     if (missingFiles.length > 0)
       return httpError('Unprocessable entity', "You didn't send all required files", { missingFiles });

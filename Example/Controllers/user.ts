@@ -37,11 +37,12 @@ export class User extends Controller {
     method: 'PATCH',
     description: 'Yo salut tu vas bien ?',
     query: z.object({ dzds: z.string() }),
-    middlewares: apply(mid2, auth),
+    file: apply('d'),
+    // middlewares: apply(mid2, auth),
     resolve: (p) => {
       // p.files.salut.
       // const data = mid1.resolve({})
-      return p.mid;
+      return p.file.d;
       if (p.query) return { STT: 'ouiou' } as const;
 
       return ',,' as const;

@@ -12,8 +12,8 @@
     "source": "./Example/index.ts"
   },
   "scripts": {
-    "dev-test": "clear && nodemon --config nodemon.json ./Example/index.ts -compileBridgeSDK",
-    "compile-test": "npx ts-node ./Example/index.ts -c",
+    "dev-test": "clear && nodemon --config nodemon.json ./Example/index.ts",
+    "compile-test": "npx ts-node ./Example/index.ts -compileBridgeSDK",
     "build": "tsc",
     "remove-dist": "if [ -d dist ]; then rm -rf dist; fi",
     "publish-minor": "npm run remove-dist && tsc && npm version patch && npm publish"
