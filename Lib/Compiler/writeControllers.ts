@@ -1,9 +1,28 @@
 import { ControllerI } from '../Controller';
+import { BridgeHandler } from '../Handler';
 import { isController, isBridgeHandler, getParamsObjectString, pathArrayToPath } from '../Utilities';
 import { createFolder, writeFile } from './fs';
 import zodToJsonSchema from 'zod-to-json-schema';
 import { jsonSchemaToZod } from 'json-schema-to-zod';
 import { isZodParser } from '../Handler/Validators/dataValidator';
+
+const hasHeaders = (handler: BridgeHandler) => {
+  if (handler.querySchema) return true;
+  if (handler.middlewares) for (const mid of handler.middlewares) if (hasHeaders(mid)) return true;
+  return false;
+};
+
+const hasBody = (handler: BridgeHandler) => {
+  if (handler.bodySchema) return true;
+  if (handler.middlewares) for (const mid of handler.middlewares) if (hasBody(mid)) return true;
+  return false;
+};
+
+const hasQuery = (handler: BridgeHandler) => {
+  if (handler.querySchema) return true;
+  if (handler.middlewares) for (const mid of handler.middlewares) if (hasQuery(mid)) return true;
+  return false;
+};
 
 export const writeController = (
   controller: ControllerI,
@@ -127,9 +146,9 @@ export const writeController = (
     if (handler.description) file += `\n  /** ${handler.description}*/`;
 
     const paramsString = [];
-    if (handler.bodySchema) paramsString.push(`body: ${typeVar}['${name}']['body']`);
-    if (handler.querySchema) paramsString.push(`query: ${typeVar}['${name}']['query']`);
-    if (handler.headersSchema) paramsString.push(`headers: ${typeVar}['${name}']['headers']`);
+    if (hasBody(handler)) paramsString.push(`body: ${typeVar}['${name}']['body']`);
+    if (hasQuery(handler)) paramsString.push(`query: ${typeVar}['${name}']['query']`);
+    if (hasHeaders(handler)) paramsString.push(`headers: ${typeVar}['${name}']['headers']`);
     if (handler.filesConfig) {
       if (handler.filesConfig === 'any') paramsString.push('files: Record<string, File>');
       else

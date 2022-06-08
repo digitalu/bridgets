@@ -17,6 +17,7 @@ export class BridgeHandler<
   public bodySchema?: DataParser;
   public querySchema?: DataParser;
   public headersSchema?: DataParser;
+  public middlewares?: Middlewares;
 
   public constructor(
     public p: {
@@ -38,6 +39,7 @@ export class BridgeHandler<
     this.bodySchema = p.bodySchema;
     this.querySchema = p.querySchema;
     this.headersSchema = p.headersSchema;
+    this.middlewares = p.middlewares;
 
     if (p.method === 'GET' && p.bodySchema) throw new Error("You can't have a body with a GET endpoint.");
     if (p.bodySchema && p.filesConfig) throw new Error("You can't get a JSON body and files in the same endpoint.");
