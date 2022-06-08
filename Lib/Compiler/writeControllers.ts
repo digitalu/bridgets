@@ -7,7 +7,7 @@ import { jsonSchemaToZod } from 'json-schema-to-zod';
 import { isZodParser } from '../Handler/Validators/dataValidator';
 
 const hasHeaders = (handler: BridgeHandler) => {
-  if (handler.querySchema) return true;
+  if (handler.headersSchema) return true;
   if (handler.middlewares) for (const mid of handler.middlewares) if (hasHeaders(mid)) return true;
   return false;
 };
