@@ -6,7 +6,7 @@ export const getJSONQueryFromURL = (queryUrl: string): Record<string, string> =>
     const queries = queryUrl.split('?');
 
     queries.forEach((query: string) => {
-      const [key, value] = query.split('=');
+      const [key, value] = query.replace('?', '&').split('&');
       queryJSON[key] = value;
     });
 
