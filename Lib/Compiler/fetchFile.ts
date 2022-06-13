@@ -1,6 +1,5 @@
 export const fetchFile = `import axios, { AxiosRequestConfig } from 'axios';
 import FormData from 'form-data';
-import url from 'url';
 
 const urlServer = '';
 
@@ -13,9 +12,22 @@ interface FETCH {
   files?: Record<string, File>;
 }
 
+const getQueryUrl = (query: FETCH["query"]) => {
+    let queryString = ""
+    if (!query) return queryString
+
+    Object.entries(query).forEach(([name, value]) => {
+        queryString += \`\${name}=\${value}&\`
+    })
+
+    queryString.slice(0, -1)
+
+    return queryString
+}
+
 export const Fetch = async ({ path, method, body, query, headers, files }: FETCH) => {
   let completeUrl = urlServer.replace(/\\/$/, '') + path;
-  if (query) completeUrl += '/' + new url.URLSearchParams(query).toString();
+  if (query && Object.keys(query).length > 0) completeUrl += '?' + getQueryUrl(query)
 
   const config: AxiosRequestConfig = { url: completeUrl, method };
 
@@ -31,5 +43,4 @@ export const Fetch = async ({ path, method, body, query, headers, files }: FETCH
   return axios(config)
     .then((res) => res.data)
     .catch((err) => err.response.data);
-};
-`;
+};`;
